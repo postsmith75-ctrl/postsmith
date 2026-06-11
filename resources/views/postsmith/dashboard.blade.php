@@ -218,7 +218,7 @@
     </div>
 
     <div class="glass-nav sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-4 flex items-center justify-between">
             <a href="{{ route('dashboard') }}" class="logo-text text-xl sm:text-2xl text-slate-950 flex items-center gap-2.5">
                 <img src="{{ asset('postsmith-logo-mark.png') }}" alt="PostSmith logo" class="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0">
                 <span>PostSmith</span>
@@ -246,7 +246,7 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 py-5 sm:py-8">
         <div id="toast-message" class="toast"></div>
 
         @if ($errors->any())
@@ -337,7 +337,7 @@
             </section>
         @endauth
 
-        <section class="hero-shell rounded-[28px] p-4 sm:p-6 lg:p-8 mb-8">
+        <section class="hero-shell rounded-[28px] p-3 sm:p-6 lg:p-8 mb-8">
             <div class="relative grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6 lg:gap-8 items-start">
                 <div class="pt-1 lg:pt-6">
                     <div class="eyebrow mb-5">{!! $icon('star', 14) !!} {{ auth()->check() ? 'Creator workbench' : 'Engagement engine for raw ideas' }}</div>
@@ -378,7 +378,7 @@
                             Ready
                         </div>
                     </div>
-                    <div class="p-4 sm:p-6">
+                    <div class="p-3 sm:p-6">
                         <div class="tab-bar mb-6">
                             <button onclick="switchMode('scratch')" id="tab-scratch" class="tab-btn {{ $activeTab === 'scratch' ? 'active' : '' }}">{!! $icon('rocket',18) !!}<span>I Have a Thought</span></button>
                             <button onclick="switchMode('rewrite')" id="tab-rewrite" class="tab-btn {{ $activeTab === 'rewrite' ? 'active' : '' }}">{!! $icon('pen',18) !!}<span>Fix My Draft</span></button>
@@ -390,7 +390,7 @@
                         </div>
 
                         <div id="mode-scratch" class="{{ $activeTab === 'scratch' ? 'fade-in' : 'hidden fade-in' }}">
-            <div class="bg-slate-50/80 rounded-2xl border border-slate-200 p-4 sm:p-6">
+            <div class="bg-slate-50/80 rounded-2xl border border-slate-200 p-3 sm:p-6">
                 <form method="POST" action="{{ route('generate') }}" class="space-y-5" id="form-generate">
                     @csrf
                     <div>
@@ -442,7 +442,7 @@
         </div>
 
         <div id="mode-rewrite" class="{{ $activeTab === 'rewrite' ? 'fade-in' : 'hidden fade-in' }}">
-            <div class="bg-slate-50/80 rounded-2xl border border-slate-200 p-4 sm:p-6">
+            <div class="bg-slate-50/80 rounded-2xl border border-slate-200 p-3 sm:p-6">
                 <form method="POST" action="{{ route('rewrite') }}" class="space-y-5" id="form-rewrite">
                     @csrf
                     <div>

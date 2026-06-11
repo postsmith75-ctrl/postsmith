@@ -565,7 +565,13 @@
                     <img
                         src="{{ asset('before-after-postsmith.png') }}"
                         alt="Before and after example showing a post improving from 35 reactions and 3 comments to 3,279 reactions and 245 comments"
-                        class="w-full rounded-xl border border-slate-200 shadow-lg shadow-slate-200/60"
+                        class="hidden sm:block w-full rounded-xl border border-slate-200 shadow-lg shadow-slate-200/60"
+                        loading="lazy"
+                    >
+                    <img
+                        src="{{ asset('before-after-postsmith-mobile.png') }}"
+                        alt="Mobile before and after example showing a post improving from 35 reactions and 3 comments to 3,279 reactions and 245 comments"
+                        class="sm:hidden w-full rounded-xl border border-slate-200 shadow-lg shadow-slate-200/60"
                         loading="lazy"
                     >
                 </div>

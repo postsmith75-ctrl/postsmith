@@ -372,8 +372,7 @@
                 <div class="premium-panel rounded-[22px] overflow-hidden">
                     <div class="tool-header px-5 sm:px-6 py-4 flex items-center justify-between gap-4">
                         <div>
-                            <p class="text-xs uppercase tracking-[0.18em] text-indigo-200 font-bold">Live Forge</p>
-                            <p class="text-sm text-white/80 mt-1">Start with a thought, draft, or viral example.</p>
+                            <p class="text-sm text-white/80">Start with a thought, draft, or viral example.</p>
                         </div>
                         <div class="hidden sm:flex items-center gap-2 text-xs text-white/70">
                             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>

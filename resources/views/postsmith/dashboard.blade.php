@@ -387,7 +387,7 @@
                         </div>
 
                         <div class="text-xs text-slate-500 mb-5">
-                            By using PostSmith, you agree to our <a href="#" class="text-indigo-600 hover:underline font-medium">Terms</a> and have read our <a href="#" class="text-indigo-600 hover:underline font-medium">Privacy Policy</a>.
+                            By using PostSmith, you agree to our <a href="{{ route('terms') }}" class="text-indigo-600 hover:underline font-medium">Terms</a> and have read our <a href="#" class="text-indigo-600 hover:underline font-medium">Privacy Policy</a>.
                         </div>
 
                         <div id="mode-scratch" class="{{ $activeTab === 'scratch' ? 'fade-in' : 'hidden fade-in' }}">
@@ -829,7 +829,7 @@
                     <div>
                         <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Legal</p>
                         <div class="space-y-2 text-gray-500">
-                            <a href="#" class="block hover:text-indigo-600 transition">Terms</a>
+                            <a href="{{ route('terms') }}" class="block hover:text-indigo-600 transition">Terms</a>
                             <a href="#" class="block hover:text-indigo-600 transition">Privacy Policy</a>
                             <a href="mailto:{{ config('postsmith.sender_email') }}" class="block hover:text-indigo-600 transition">Contact</a>
                         </div>

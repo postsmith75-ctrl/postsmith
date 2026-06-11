@@ -1,0 +1,326 @@
+Privacy Policy
+Last Updated: May 5, 2026
+
+1. Introduction and Scope
+PostSmith ("we," "us," "our," or "the Company") is committed to protecting your privacy and handling your personal data with transparency, care, and in compliance with applicable data protection laws. This Privacy Policy explains how we collect, use, store, share, and safeguard your information when you access or use the PostSmith platform, website, mobile interfaces, APIs, and related services (collectively, "the Service").
+
+This Policy applies to all visitors, registered users, subscribers, guest users, and anyone who interacts with the Service. By accessing or using PostSmith, you acknowledge that you have read and understood this Privacy Policy and consent to the practices described herein. If you do not agree with this Policy, you must not access or use the Service.
+
+We may update this Privacy Policy from time to time to reflect changes in our practices, legal requirements, or Service functionality. Material changes will be communicated via email, in-app notification, or a prominent notice on our website at least thirty (30) days before they take effect, unless immediate changes are required by law or for security reasons. Your continued use of the Service after such changes constitutes acceptance of the revised Policy.
+
+2. Data Controller and Contact Details
+For the purposes of applicable data protection laws, including the Nigeria Data Protection Regulation (NDPR) and, where applicable, the General Data Protection Regulation (GDPR), PostSmith acts as the data controller for personal data collected through the Service.
+
+PostSmith Data Controller
+
+Email: privacy@postsmith.app
+
+Business Address: Lagos, Nigeria
+
+For data protection inquiries, we aim to respond within five (5) business days.
+
+If you are located in the European Economic Area (EEA), the United Kingdom, or other jurisdictions with dedicated data protection representatives, we have appointed internal compliance officers to ensure your rights are respected. You may direct GDPR-specific inquiries to the email address above.
+
+3. Information We Collect
+We collect several categories of information to provide, improve, and secure the Service. These categories are detailed below:
+
+3.1 Account and Registration Information
+
+When you create an account, we collect:
+
+Email Address: Collected during Google OAuth authentication or manual registration. This serves as your unique identifier and primary communication channel.
+Name: Your display name, which may be retrieved from your Google profile or provided manually.
+Google ID: A unique identifier provided by Google OAuth, used to link your Google account to your PostSmith profile.
+Authentication Tokens: Session identifiers and CSRF tokens necessary for secure login state management.
+Password Hash: If you register via non-OAuth methods, we store an encrypted hash of your password using industry-standard algorithms. We do not store plaintext passwords.
+3.2 Usage and Activity Data
+
+We automatically collect data about how you interact with the Service:
+
+Generation History: Records of every post generation, rewrite, and Viral Lab analysis you perform, including input text, selected platforms, length preferences, chosen engagement drivers, timestamps, and AI-generated outputs.
+Performance Metrics: Engagement data you voluntarily log in the Performance Tracker, including likes, comments, shares, and associated post metadata.
+Driver Selections: Your personal forge collections, discovered drivers, and community leaderboard contributions.
+Feature Usage: Which tabs, tools, and features you access, how frequently you use them, and your navigation patterns within the application.
+Rate Limit Data: Request counts, timestamps, and windowed usage statistics to enforce fair use policies and prevent abuse.
+3.3 Content Data
+
+We collect the content you submit to the Service for processing:
+
+Raw Thoughts and Drafts: The text you input into the Thought-to-Post generator, Draft Rewrite tool, and Viral Lab submission fields.
+Generated Content: AI-produced posts, rewrites, analyses, and feedback that are created in response to your inputs.
+Viral Lab Submissions: High-performing posts you submit for community analysis, along with the engagement metrics (likes, comments, shares) and platform information you provide.
+Saved Posts: Content you choose to save to your Performance Tracker for long-term tracking and comparison.
+3.4 Device and Technical Information
+
+IP Address: Collected for security, fraud prevention, rate limiting, and guest usage tracking. Guest users are identified partially via IP address in combination with browser cookies.
+Browser and Device Metadata: User agent string, operating system, device type, screen resolution, and browser version to optimize user experience and diagnose technical issues.
+Cookie Data: See Section 10 for detailed information on our use of cookies and similar technologies.
+Log Data: Server logs capturing request timestamps, endpoints accessed, HTTP status codes, and error traces for debugging and security monitoring.
+3.5 Payment and Billing Information
+
+When you subscribe to a paid plan, our payment processor, Flutterwave, collects and processes your payment details. PostSmith does not store full credit card numbers, bank account details, or CVV codes on our servers. We do receive and retain:
+
+Transaction reference numbers and payment confirmation IDs;
+Subscription tier, billing cycle (monthly/annual), and payment timestamps;
+Payment status (successful, failed, refunded);
+Currency and amount paid;
+Last four digits of the payment instrument (where provided by the processor for receipt generation).
+3.6 Communications Data
+
+When you contact our support team, submit feedback, or interact with our marketing communications, we collect:
+
+Your email address and any contact details you provide;
+The content of your messages, support tickets, and feedback submissions;
+Email open rates, click-through rates, and unsubscribe requests for analytics and compliance purposes.
+4. How We Use Your Information
+We process your personal data for the following lawful bases and purposes:
+
+4.1 To Provide and Maintain the Service
+
+Authenticating your identity and maintaining your login session;
+Generating, rewriting, and analyzing content using our AI systems;
+Saving your posts, history, and performance metrics to your account;
+Enforcing usage limits and tier-based feature access;
+Processing payments, managing subscriptions, and handling billing inquiries.
+4.2 To Improve and Develop the Service
+
+AI Training and Fine-Tuning: We use aggregated, pseudonymized user content to train, calibrate, and improve our language models and engagement driver detection algorithms. Individual raw thoughts are not used in publicly released model training datasets without anonymization.
+Viral Lab Community Data: We aggregate and anonymize Viral Lab submissions to identify trending engagement drivers, update community leaderboards, and expand our Forge Library. Personal identifiers are stripped before inclusion in community analytics.
+Product Analytics: We analyze usage patterns, feature adoption, and error rates to prioritize development, fix bugs, and optimize user experience.
+4.3 To Communicate With You
+
+Sending transactional emails, including welcome messages, payment confirmations, subscription renewals, password resets, and security alerts;
+Sending service-related notifications, such as weekly reminders, downgrade notices, and feature announcements;
+Sending marketing communications, promotional offers, and newsletters (only with your consent, which you may withdraw at any time);
+Responding to your support inquiries and feedback.
+4.4 For Security, Fraud Prevention, and Legal Compliance
+
+Detecting and preventing unauthorized access, abuse, spam, and automated attacks;
+Monitoring for fraudulent payment activity and subscription abuse;
+Complying with legal obligations, court orders, and regulatory requests;
+Enforcing our Terms of Use and protecting the rights, property, and safety of PostSmith, our users, and the public.
+4.5 For Personalization
+
+Providing personalized insights in the Performance Tracker based on your logged engagement metrics;
+Prioritizing engagement drivers in AI generation based on your historical performance data;
+Customizing in-app recommendations, upgrade prompts, and feature suggestions.
+5. Legal Basis for Processing
+We process personal data based on the following legal grounds, depending on your jurisdiction and the nature of the processing:
+
+Performance of a Contract: Processing necessary to fulfill our obligations under the Terms of Use and provide the Service you subscribed to.
+Consent: Where required by law, we obtain your explicit consent for specific processing activities, such as marketing communications, AI training using non-anonymized data, or cookie placement. You may withdraw consent at any time without affecting the lawfulness of processing based on consent before its withdrawal.
+Legitimate Interests: Processing necessary for our legitimate business interests, including service improvement, fraud prevention, network security, and analytics, provided such interests are not overridden by your fundamental rights and freedoms.
+Legal Obligation: Processing required to comply with applicable laws, regulations, court orders, or governmental requests.
+Vital Interests: Rarely, processing necessary to protect your vital interests or those of another person.
+6. How We Share Your Information
+PostSmith does not sell your personal data to third parties. We share information only in the limited circumstances described below:
+
+6.1 AI and Technology Providers
+
+To generate content and perform analyses, we transmit your inputs to third-party AI model providers, including:
+
+Groq: For high-speed inference using Llama and other open-weight models;
+OpenAI: For GPT-4o-mini and other models;
+DeepSeek: For DeepSeek-Chat and related models;
+Google (Gemini): For Gemini 2.0 Flash and related models.
+These providers process your data in accordance with their own privacy policies and data processing agreements. We do not authorize them to use your data for training their general models unless you have explicitly consented to such use or the data is fully anonymized.
+
+6.2 Payment Processors
+
+We share necessary transaction data with Flutterwave to process payments, verify transactions, and manage subscriptions. Flutterwave handles your payment instrument details in accordance with PCI-DSS standards and their privacy policy.
+
+6.3 Communication Services
+
+We use Resend to deliver transactional and marketing emails. Resend processes your email address and message content solely for delivery purposes and in accordance with their data processing terms.
+
+6.4 Hosting and Infrastructure Partners
+
+We rely on cloud hosting providers, database services, and content delivery networks to store and transmit data. These providers are contractually bound to maintain appropriate security standards and may only process data for the purpose of providing their services to us.
+
+6.5 Legal and Regulatory Disclosures
+
+We may disclose your information if required to do so by law, regulation, legal process, or governmental request, or when we believe in good faith that disclosure is necessary to:
+
+Comply with a legal obligation;
+Protect and defend our rights or property;
+Prevent or investigate possible wrongdoing in connection with the Service;
+Protect the personal safety of users or the public;
+Protect against legal liability.
+6.6 Business Transfers
+
+If PostSmith is involved in a merger, acquisition, financing, reorganization, bankruptcy, or sale of assets, your information may be transferred as part of that transaction. We will notify you via email and/or a prominent notice on the Service of any change in ownership or use of your personal data, as well as any choices you may have regarding your information.
+
+6.7 With Your Consent
+
+We may share your information with third parties when you have given us explicit consent to do so, such as when integrating PostSmith with external tools or platforms at your direction.
+
+7. Data Retention
+We retain your personal data for as long as necessary to fulfill the purposes for which it was collected, comply with legal obligations, resolve disputes, and enforce our agreements. Specific retention periods vary by data category:
+
+Account Information: Retained for the duration of your account existence plus seven (7) years after deletion, unless a shorter period is required by law. This supports legal compliance, fraud investigation, and dispute resolution.
+Content and Generation History: Retained according to your subscription tier. Free tier users' generation history is retained for seven (7) days; Starter tier for ninety (90) days; Pro tier indefinitely until account deletion. Upon account deletion, content data is permanently removed within thirty (30) days, except for anonymized aggregates used in community analytics.
+Performance Tracker Data: Retained until you delete individual posts or your account. If you downgrade from Pro or Starter to Free, historical data beyond the Free tier limit may be archived and become inaccessible, though it remains stored for the duration of your account.
+Viral Lab Submissions: Retained indefinitely in anonymized, aggregated form to support community driver discovery. Identifiable submission metadata (user ID, submission timestamp) is retained for two (2) years or until account deletion, whichever comes first.
+Payment Records: Retained for seven (7) years to comply with tax, accounting, and financial reporting obligations.
+Server Logs and Security Data: Retained for ninety (90) days, after which they are automatically purged unless required for an ongoing investigation or legal hold.
+Communication Records: Support tickets and feedback are retained for three (3) years to track issue resolution and service improvement. Marketing email interaction data is retained for two (2) years.
+When data is no longer needed for its original purpose and no legal obligation requires retention, we securely delete or anonymize it using industry-standard methods.
+
+8. Data Security
+We implement a comprehensive, multi-layered security program to protect your data against unauthorized access, alteration, disclosure, or destruction. Our security measures include:
+
+Encryption in Transit: All data transmitted between your browser and our servers is protected using Transport Layer Security (TLS) 1.2 or higher. API communications with third-party providers similarly use encrypted channels.
+Encryption at Rest: Sensitive database fields, including authentication tokens and payment references, are encrypted using AES-256 or equivalent standards.
+Secure Authentication: We use Google OAuth for passwordless authentication where possible, reducing password-related vulnerabilities. CSRF tokens protect against cross-site request forgery.
+Access Controls: Strict role-based access controls limit internal staff access to production data. Access is granted on a need-to-know basis and regularly audited.
+Database Security: Our databases are hosted on secure infrastructure with firewalls, intrusion detection, and regular vulnerability scanning. Prepared statements and parameterized queries prevent SQL injection attacks.
+Rate Limiting: We enforce request rate limits to prevent brute-force attacks, scraping, and API abuse.
+Incident Response: We maintain an incident response plan to detect, contain, and remediate security breaches. In the event of a breach affecting your personal data, we will notify you and relevant authorities within seventy-two (72) hours of discovery, as required by applicable law.
+Despite our robust security measures, no internet-based service can guarantee absolute security. You are responsible for maintaining the confidentiality of your account credentials and for promptly notifying us of any suspected unauthorized access.
+
+9. International Data Transfers
+PostSmith is operated from Lagos, Nigeria. Your data may be transferred to, stored in, and processed in countries other than your country of residence, including the United States, European Union member states, and other jurisdictions where our third-party providers maintain infrastructure.
+
+When we transfer personal data from the EEA, UK, or other jurisdictions with cross-border transfer restrictions to countries that do not provide an adequate level of data protection, we ensure appropriate safeguards are in place, such as:
+
+Standard Contractual Clauses (SCCs) approved by the European Commission or UK Information Commissioner's Office;
+Adequacy decisions where applicable;
+Binding corporate rules or other legally recognized transfer mechanisms.
+By using the Service, you consent to the transfer of your data to these jurisdictions, subject to the safeguards described above.
+
+10. Cookies and Similar Technologies
+PostSmith uses cookies and similar tracking technologies to enhance your experience, analyze usage, and support essential functionality.
+
+10.1 Types of Cookies We Use
+
+Essential Cookies: Necessary for the Service to function. These include session cookies that maintain your login state and CSRF protection tokens. Without these cookies, you cannot access secure areas of the Service.
+Functional Cookies: Enable personalized features such as remembering your last selected platform, length preference, and active tab. These improve convenience but are not strictly necessary.
+Analytics Cookies: Help us understand how visitors interact with the Service by collecting and reporting information anonymously. We may use these to track page views, feature usage, and conversion funnels.
+Guest Identification Cookies: A persistent cookie ("postsmith_guest_id") is placed on your device to track guest usage limits across sessions without requiring registration. This cookie expires after three hundred and sixty-five (365) days.
+10.2 Cookie Management
+
+You can manage or disable cookies through your browser settings. However, disabling essential cookies will prevent you from logging in or using core features. Disabling analytics cookies will not affect functionality but reduces our ability to improve the Service.
+
+We do not currently respond to "Do Not Track" signals due to the lack of a standardized industry approach. However, you may opt out of analytics tracking by contacting us.
+
+10.3 Third-Party Cookies
+
+Our payment processor (Flutterwave) and email service (Resend) may place their own cookies when you interact with their embedded components or redirected pages. Their use of cookies is governed by their respective privacy policies.
+
+11. Your Privacy Rights
+Depending on your jurisdiction, you may have the following rights regarding your personal data:
+
+11.1 Right to Access
+
+You have the right to request a copy of the personal data we hold about you, including the categories of data, purposes of processing, and third parties with whom it is shared.
+
+11.2 Right to Rectification
+
+You may request correction of inaccurate or incomplete personal data. You can update certain information directly through your account settings. For other corrections, contact us using the details in Section 2.
+
+11.3 Right to Erasure ("Right to Be Forgotten")
+
+You may request deletion of your personal data where:
+
+The data is no longer necessary for the purposes for which it was collected;
+You withdraw consent and there is no other legal basis for processing;
+You object to processing and there are no overriding legitimate grounds;
+The data has been unlawfully processed;
+Deletion is required to comply with a legal obligation.
+We may retain certain data where required by law or for legitimate business purposes, such as fraud prevention or legal claims, but we will anonymize it where possible.
+
+11.4 Right to Restrict Processing
+
+You may request that we restrict processing of your personal data in certain circumstances, such as when you contest its accuracy or object to our legitimate interests. During restriction, we will store the data but not process it further.
+
+11.5 Right to Data Portability
+
+You have the right to receive your personal data in a structured, commonly used, and machine-readable format, and to transmit that data to another controller. Pro-tier users may export their post history via CSV. For additional portability requests, contact us.
+
+11.6 Right to Object
+
+You may object to processing based on legitimate interests or for direct marketing purposes at any time. If you object to marketing, we will cease sending promotional communications within ten (10) business days.
+
+11.7 Right to Withdraw Consent
+
+Where processing is based on your consent, you have the right to withdraw consent at any time without affecting the lawfulness of processing conducted before withdrawal. To withdraw consent for marketing, click the unsubscribe link in any email or contact us directly.
+
+11.8 Right to Lodge a Complaint
+
+If you believe your data protection rights have been violated, you have the right to lodge a complaint with your local data protection authority. In Nigeria, this is the Nigeria Data Protection Commission (NDPC). In the EEA, you may contact your national Data Protection Authority.
+
+11.9 Exercising Your Rights
+
+To exercise any of these rights, please contact us at privacy@postsmith.app with a clear description of your request. We will respond within thirty (30) days, or sooner where required by law. We may need to verify your identity before fulfilling your request to prevent unauthorized access to your data.
+
+12. Children's Privacy
+PostSmith is not intended for use by individuals under the age of eighteen (18). We do not knowingly collect personal data from children under 13. If we learn that we have collected personal data from a child under 13 without verification of parental consent, we will take steps to delete that information as quickly as possible.
+
+If you believe that a child under 13 may have provided us with personal data, please contact us immediately at privacy@trypostsmith.com so we can investigate and take appropriate action.
+
+13. AI Data Processing and Model Training
+Given the nature of PostSmith as an AI-powered platform, we want to be transparent about how your data interacts with artificial intelligence systems:
+
+Input Transmission: When you submit a raw thought, draft, or Viral Lab post, that text is transmitted to third-party AI providers (Groq, OpenAI, DeepSeek, Google) for processing. These transmissions occur over encrypted connections and are subject to the providers' data processing terms.
+Output Generation: The AI-generated content is returned to our servers and displayed to you. We store both your inputs and the AI outputs to maintain your generation history and enable the Performance Tracker.
+Training Data Contribution: With your consent, or where data is fully anonymized and aggregated, your submissions may contribute to improving our internal engagement driver library and training datasets. We never use identifiable personal data for public model training without explicit consent.
+Retention of AI Conversations: Individual AI interactions are retained according to your tier's history limits (see Section 7). Anonymized patterns extracted from these interactions may be retained indefinitely for service improvement.
+Opt-Out: If you do not want your data used for AI training or community analytics, even in anonymized form, you may opt out by contacting us. Note that opting out does not affect the processing necessary to provide the core Service to you.
+14. Viral Lab and Community Data
+The Viral Lab feature involves community-driven analysis of high-performing social media content. We handle this data with the following safeguards:
+
+Anonymization: Before Viral Lab submissions are included in community leaderboards, trending driver calculations, or public datasets, they are stripped of direct identifiers (name, email, user ID) and aggregated with other submissions.
+Attribution: While individual submissions are anonymized for community analytics, we maintain internal records linking discoveries to contributing users for the purpose of personal forge updates and, where applicable, recognition.
+Content Rights: You warrant that you have the right to submit any post to the Viral Lab and that doing so does not violate the intellectual property or privacy rights of the original creator. PostSmith is not responsible for disputes arising from unauthorized submissions.
+Public Driver Library: Engagement drivers discovered through the Viral Lab may be added to the global Forge Library and made available to all users. These drivers consist of structural and psychological pattern descriptions, not verbatim user submissions.
+15. Third-Party Links and Services
+The Service may contain links to third-party websites, services, or resources that are not owned or controlled by PostSmith. This Privacy Policy does not apply to those third-party services. We encourage you to review the privacy policies of any third-party service you interact with, including Google, Flutterwave, Resend, and the social media platforms (Facebook, LinkedIn, Twitter/X, Instagram, Threads, Reddit) that you may publish content to.
+
+PostSmith is not responsible for the content, privacy practices, or security of any third-party websites or services.
+
+16. Data Breach Notification
+In the unlikely event of a data breach that compromises the security, confidentiality, or integrity of your personal data, PostSmith will:
+
+Investigate the breach promptly to determine its scope, cause, and impact;
+Take immediate steps to contain the breach, mitigate harm, and prevent recurrence;
+Notify affected users via email within seventy-two (72) hours of discovery, where feasible, providing details of the breach, data categories affected, and steps taken;
+Notify relevant data protection authorities within the timeframes required by applicable law (e.g., 72 hours under GDPR);
+Cooperate fully with law enforcement and regulatory investigations if required.
+17. California Consumer Privacy Act (CCPA) and California Privacy Rights Act (CPRA) Disclosures
+If you are a California resident, the following additional disclosures apply to you under the CCPA/CPRA:
+
+Categories of Personal Information Collected: Identifiers (name, email, IP address), commercial information (transaction history), internet activity (browsing history, interactions with the Service), geolocation data, and inferences drawn from the above.
+Categories of Personal Information Disclosed for Business Purposes: We disclose identifiers and commercial information to our payment processor, AI providers, email service, and hosting infrastructure providers.
+Sale or Sharing of Personal Information: PostSmith does not sell your personal information. We do not share your personal information for cross-context behavioral advertising.
+Sensitive Personal Information: We do not collect sensitive personal information as defined under CPRA, except as necessary to provide the Service with your consent.
+Your California Rights: You have the right to know, delete, correct, and opt out of the sale/sharing of your personal information. You also have the right to non-discrimination for exercising your privacy rights and the right to limit use of sensitive personal information.
+To exercise your California privacy rights, contact us at privacy@postsmith.app.
+
+18. Nevada Privacy Rights
+If you are a resident of Nevada, you have the right to opt out of the sale of certain personal information. PostSmith does not sell your personal information as defined under Nevada law. If this practice changes, we will update this Policy and provide an opt-out mechanism.
+
+19. Accessibility of This Policy
+We are committed to ensuring that this Privacy Policy is accessible to all users, including those with disabilities. If you require this Policy in an alternative format (e.g., large print, audio, or Braille), please contact us and we will make reasonable accommodations.
+
+20. Changes to This Privacy Policy
+We may update this Privacy Policy periodically to reflect changes in our practices, technology, legal requirements, or Service offerings. When we make material changes, we will:
+
+Post the updated Policy on this page with a revised "Last Updated" date;
+Notify you via email at least thirty (30) days before material changes take effect, where feasible;
+Display a prominent notice within the Service upon your next login.
+Your continued use of PostSmith after the effective date of the revised Policy constitutes your acceptance of the changes. If you do not agree to the updated Policy, you must stop using the Service and delete your account.
+
+21. Contact Us
+If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact our Data Protection Officer:
+
+PostSmith Privacy Office
+
+Email: privacy@postsmith.app
+
+Business Address: Lagos, Nigeria
+
+We aim to respond to all privacy-related inquiries within five (5) business days. For complex requests, such as data subject access requests, we will acknowledge receipt within five (5) business days and provide a full response within thirty (30) days.
+
+© 2026 PostSmith. All rights reserved.
+
+Your privacy matters. Thank you for trusting PostSmith with your creative process.

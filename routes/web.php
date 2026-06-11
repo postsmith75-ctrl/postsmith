@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 
 Route::get('/', DashboardController::class)->name('dashboard');
 Route::view('/terms', 'legal.terms')->name('terms');
+Route::view('/privacy', 'legal.privacy')->name('privacy');
 Route::post('/generate', [GenerateController::class, 'store'])->name('generate');
 Route::post('/rewrite', [RewriteController::class, 'store'])->name('rewrite');
 Route::post('/viral-lab', [ViralLabController::class, 'store'])->name('viral-lab.store');

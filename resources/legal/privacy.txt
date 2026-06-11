@@ -13,7 +13,7 @@ For the purposes of applicable data protection laws, including the Nigeria Data 
 
 PostSmith Data Controller
 
-Email: privacy@postsmith.app
+Email: info@trypostsmith.com
 
 Business Address: Lagos, Nigeria
 
@@ -251,12 +251,12 @@ If you believe your data protection rights have been violated, you have the righ
 
 11.9 Exercising Your Rights
 
-To exercise any of these rights, please contact us at privacy@postsmith.app with a clear description of your request. We will respond within thirty (30) days, or sooner where required by law. We may need to verify your identity before fulfilling your request to prevent unauthorized access to your data.
+To exercise any of these rights, please contact us at info@trypostsmith.com with a clear description of your request. We will respond within thirty (30) days, or sooner where required by law. We may need to verify your identity before fulfilling your request to prevent unauthorized access to your data.
 
 12. Children's Privacy
 PostSmith is not intended for use by individuals under the age of eighteen (18). We do not knowingly collect personal data from children under 13. If we learn that we have collected personal data from a child under 13 without verification of parental consent, we will take steps to delete that information as quickly as possible.
 
-If you believe that a child under 13 may have provided us with personal data, please contact us immediately at privacy@trypostsmith.com so we can investigate and take appropriate action.
+If you believe that a child under 13 may have provided us with personal data, please contact us immediately at info@trypostsmith.com so we can investigate and take appropriate action.
 
 13. AI Data Processing and Model Training
 Given the nature of PostSmith as an AI-powered platform, we want to be transparent about how your data interacts with artificial intelligence systems:
@@ -294,7 +294,7 @@ Categories of Personal Information Disclosed for Business Purposes: We disclose 
 Sale or Sharing of Personal Information: PostSmith does not sell your personal information. We do not share your personal information for cross-context behavioral advertising.
 Sensitive Personal Information: We do not collect sensitive personal information as defined under CPRA, except as necessary to provide the Service with your consent.
 Your California Rights: You have the right to know, delete, correct, and opt out of the sale/sharing of your personal information. You also have the right to non-discrimination for exercising your privacy rights and the right to limit use of sensitive personal information.
-To exercise your California privacy rights, contact us at privacy@postsmith.app.
+To exercise your California privacy rights, contact us at info@trypostsmith.com.
 
 18. Nevada Privacy Rights
 If you are a resident of Nevada, you have the right to opt out of the sale of certain personal information. PostSmith does not sell your personal information as defined under Nevada law. If this practice changes, we will update this Policy and provide an opt-out mechanism.
@@ -315,7 +315,7 @@ If you have any questions, concerns, or requests regarding this Privacy Policy o
 
 PostSmith Privacy Office
 
-Email: privacy@postsmith.app
+Email: info@trypostsmith.com
 
 Business Address: Lagos, Nigeria
 

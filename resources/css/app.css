@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Space Grotesk', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-postsmith-primary: #4f46e5;
+    --color-postsmith-primary-dark: #4338ca;
+    --color-postsmith-accent: #7c3aed;
+    --color-postsmith-surface: #f8fafc;
+    --color-postsmith-ink: #1f2937;
+}

@@ -552,7 +552,23 @@
         @endif
 
         @guest
-        <section class="before-after mb-8">
+        <section class="before-after mb-8 overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-0 bg-white border-b border-slate-200">
+                <div class="p-5 sm:p-7 lg:p-8 flex flex-col justify-center">
+                    <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600 mb-3">Before and after</p>
+                    <h2 class="text-3xl sm:text-4xl font-bold logo-text text-slate-950 leading-tight">Great Ideas Deserve More Than 3 Likes.</h2>
+                    <p class="text-slate-600 text-base sm:text-lg leading-7 mt-4">Most creators and businesses waste hours creating content that gets ignored.</p>
+                    <p class="text-slate-700 text-base sm:text-lg leading-7 mt-4">PostSmith helps you create content people actually want to read by transforming your thoughts into content that builds authority, grows your audience, and drives engagement.</p>
+                </div>
+                <div class="p-3 sm:p-5">
+                    <img
+                        src="{{ asset('before-after-postsmith.png') }}"
+                        alt="Before and after example showing a post improving from 35 reactions and 3 comments to 3,279 reactions and 245 comments"
+                        class="w-full rounded-xl border border-slate-200 shadow-lg shadow-slate-200/60"
+                        loading="lazy"
+                    >
+                </div>
+            </div>
             <div class="grid grid-cols-1 lg:grid-cols-2">
                 <div class="p-5 sm:p-7 border-b lg:border-b-0 lg:border-r border-slate-200">
                     <p class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Raw thought</p>

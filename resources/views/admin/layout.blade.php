@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin') - PostSmith</title>
-    <link rel="icon" type="image/png" href="{{ asset('postsmithlogowithoutbg.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('postsmithlogowithoutbg.png') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -18,7 +20,7 @@
         <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
                 <a href="{{ route('admin.dashboard') }}" class="logo-text text-xl text-slate-950 inline-flex items-center gap-2.5">
-                    <img src="{{ asset('postsmithlogowithoutbg.png') }}" alt="PostSmith logo" class="w-9 h-9 object-contain shrink-0">
+                    <img src="{{ asset('postsmith-logo-mark.png') }}" alt="PostSmith logo" class="w-9 h-9 object-contain shrink-0">
                     <span>PostSmith Admin</span>
                 </a>
                 <nav class="hidden md:flex items-center gap-2 text-sm font-semibold">

@@ -28,8 +28,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PostSmith - Turn Any Thought Into a Post That Gets Likes, Comments & Shares</title>
-    <link rel="icon" type="image/png" href="{{ asset('postsmithlogowithoutbg.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('postsmithlogowithoutbg.png') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
@@ -207,7 +209,7 @@
         <div class="flex flex-col items-center justify-center text-center w-full h-full">
             <div class="max-w-sm px-6">
                 <div class="w-[200px] h-[200px] mx-auto mb-[30px] rounded-full bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 flex items-center justify-center shadow-lg shadow-indigo-500/10">
-                    <img src="{{ asset('postsmithlogowithoutbg.png') }}" alt="PostSmith" class="w-32 h-32 object-contain">
+                    <img src="{{ asset('postsmith-logo-mark.png') }}" alt="PostSmith" class="w-32 h-32 object-contain">
                 </div>
                 <h3 class="text-xl font-bold logo-text text-gray-900 mb-2 mt-1">Forging your post...</h3>
                 <p class="text-sm text-gray-500 font-medium min-h-[24px]">Finding the hook, rhythm, and driver.</p>
@@ -218,7 +220,7 @@
     <div class="glass-nav sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <a href="{{ route('dashboard') }}" class="logo-text text-xl sm:text-2xl text-slate-950 flex items-center gap-2.5">
-                <img src="{{ asset('postsmithlogowithoutbg.png') }}" alt="PostSmith logo" class="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0">
+                <img src="{{ asset('postsmith-logo-mark.png') }}" alt="PostSmith logo" class="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0">
                 <span>PostSmith</span>
             </a>
             <div class="flex items-center gap-2 sm:gap-3">
@@ -803,7 +805,7 @@
             <div class="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-8 items-start">
                 <div>
                     <a href="{{ route('dashboard') }}" class="logo-text text-2xl text-slate-950 inline-flex items-center gap-2.5">
-                        <img src="{{ asset('postsmithlogowithoutbg.png') }}" alt="PostSmith logo" class="w-10 h-10 object-contain shrink-0">
+                        <img src="{{ asset('postsmith-logo-mark.png') }}" alt="PostSmith logo" class="w-10 h-10 object-contain shrink-0">
                         <span>PostSmith</span>
                     </a>
                     <p class="text-sm text-gray-500 max-w-md mt-3 leading-relaxed">Your thought, amplified. Turn raw ideas into posts with stronger hooks, clearer structure, and engagement drivers built for real conversations.</p>

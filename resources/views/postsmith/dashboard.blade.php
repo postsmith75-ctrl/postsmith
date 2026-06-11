@@ -569,16 +569,6 @@
                     >
                 </div>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2">
-                <div class="p-5 sm:p-7 border-b lg:border-b-0 lg:border-r border-slate-200">
-                    <p class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Raw thought</p>
-                    <p class="text-lg font-semibold text-slate-900 leading-8">"I keep posting every day and nobody replies. Maybe my ideas are just boring."</p>
-                </div>
-                <div class="p-5 sm:p-7 bg-slate-950 text-white">
-                    <p class="text-xs font-bold uppercase tracking-wide text-indigo-200 mb-3">PostSmith output</p>
-                    <p class="text-lg font-semibold leading-8">I used to think my ideas were boring because nobody replied.<br><br>Turns out the idea was fine. The hook was the problem.<br><br>If your posts keep disappearing, don't write more. Rewrite the first line.</p>
-                </div>
-            </div>
         </section>
         @endguest
 

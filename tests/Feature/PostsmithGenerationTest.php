@@ -15,7 +15,7 @@ class PostsmithGenerationTest extends TestCase
             ->assertOk()
             ->assertSee('PostSmith')
             ->assertSee('#4f46e5')
-            ->assertSee('Turn rough thoughts into posts people reply to.');
+            ->assertSee('Turn rough thoughts into posts people like, share and comment on.');
     }
 
     public function test_guest_can_generate_with_fallback_engine(): void

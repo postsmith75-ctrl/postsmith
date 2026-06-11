@@ -340,7 +340,9 @@
         <section class="hero-shell rounded-[28px] p-3 sm:p-6 lg:p-8 mb-8">
             <div class="relative grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6 lg:gap-8 items-start">
                 <div class="pt-1 lg:pt-6">
-                    <div class="eyebrow mb-5">{!! $icon('star', 14) !!} {{ auth()->check() ? 'Creator workbench' : 'Engagement engine for raw ideas' }}</div>
+                    @auth
+                        <div class="eyebrow mb-5">{!! $icon('star', 14) !!} Creator workbench</div>
+                    @endauth
                     <h1 class="text-[2.35rem] sm:text-5xl lg:text-6xl font-bold logo-text text-slate-950 leading-[0.98] max-w-2xl">{{ auth()->check() ? 'Forge your next post with data behind it.' : 'Turn rough thoughts into posts people like, comment and share.' }}</h1>
                     <p class="text-slate-600 text-base sm:text-lg leading-7 sm:leading-8 max-w-xl mt-5">{{ auth()->check() ? 'Use your best-performing patterns, save the winners, and keep building a content system around what actually gets responses.' : "Dump what's in your head. PostSmith finds the emotion, structure, and hook, then gives you polished ways to say it so people actually respond." }}</p>
 

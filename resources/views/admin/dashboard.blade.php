@@ -25,27 +25,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-<style>
-    .kpi-card { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(15,23,42,0.08); }
-    .kpi-card:hover { border-color: #c7d2fe; transform: translateY(-2px); transition: all 0.3s ease; }
-    .positive { color: #059669; }
-    .negative { color: #dc2626; }
-    .neutral { color: #64748b; }
-    .chart-container { position: relative; height: 280px; }
-    .table-row:hover { background: #f8fafc; }
-    .pulse-dot { animation: pulse-dot 2s infinite; }
-    @keyframes pulse-dot { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
-    .star-gold { color: #f59e0b; }
-    .dashboard-meta { color: #cbd5e1; }
-    .dashboard-meta strong { color: #ffffff; }
-    .dashboard-control { background: #ffffff; border: 1px solid #cbd5e1; color: #334155; }
-    .dashboard-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
-    .dashboard-control:hover { background: #f8fafc; }
-    .kpi-card .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #f1f5f9; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(15,23,42,0.5); }
-    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
-</style>
+<!-- admin-dark.css handles dark admin styles -->
 
 <div class="space-y-8">
     <div class="flex flex-wrap items-center justify-between gap-3">
@@ -241,14 +221,19 @@
                         <tr class="table-row">
                             <td class="py-3 pr-4 text-gray-800 font-medium">{{ \Carbon\Carbon::parse($week)->format('M j') }}</td>
                             <td class="py-3 pr-4 text-center text-gray-600">{{ $cohort['total'] }}</td>
-                            @foreach ([[$d1, [50, 20]], [$d7, [40, 15]], [$d30, [30, 10]]] as [$percent, $limits])
+                            @php
+                                $cohort_pairs = [[$d1, [50, 20]], [$d7, [40, 15]], [$d30, [30, 10]]];
+                            @endphp
+                            @foreach ($cohort_pairs as $pair)
                                 @php
-                            $bar = $percent >= $limits[0] ? 'bg-emerald-500' : ($percent >= $limits[1] ? 'bg-yellow-500' : 'bg-red-500');
-                            $text = $percent >= $limits[0] ? 'positive' : ($percent >= $limits[1] ? 'text-yellow-600' : 'negative');
+                                    $percent = $pair[0];
+                                    $limits = $pair[1];
+                                    $bar = $percent >= $limits[0] ? 'bg-emerald-500' : ($percent >= $limits[1] ? 'bg-yellow-500' : 'bg-red-500');
+                                    $text = $percent >= $limits[0] ? 'positive' : ($percent >= $limits[1] ? 'text-yellow-600' : 'negative');
                                 @endphp
                                 <td class="py-3 pr-4 text-center">
                                     <div class="inline-flex items-center gap-1">
-                                        <span class="w-16 h-2 rounded-full bg-gray-200 overflow-hidden"><span class="block h-full rounded-full {{ $bar }}" style="width:{{ min(100, $percent) }}%"></span></span>
+                                        <span class="w-16 h-2 rounded-full bg-gray-200 overflow-hidden"><span class="block h-full rounded-full {{ $bar }}" data-width="{{ min(100, $percent) }}"></span></span>
                                         <span class="text-xs {{ $text }}">{{ $percent }}%</span>
                                     </div>
                                 </td>
@@ -400,60 +385,18 @@
     </div>
 </div>
 
-<script>
-    const commonOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#64748b', font: { size: 11 } } } },
-        scales: {
-            x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' } },
-            y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' } }
-        }
-    };
+    <!-- chart data encoded to avoid Blade tokens in inline JS (read by admin-dashboard.js) -->
+    <div id="dashboard-data" style="display:none"
+        data-chart-labels="{{ base64_encode(json_encode($chartLabels)) }}"
+        data-chart-signups="{{ base64_encode(json_encode($chartSignups)) }}"
+        data-chart-gens="{{ base64_encode(json_encode($chartGens)) }}"
+        data-rating-labels="{{ base64_encode(json_encode($ratingLabels)) }}"
+        data-rating-values="{{ base64_encode(json_encode($ratingValues)) }}"
+        data-tier-labels="{{ base64_encode(json_encode($tierLabels)) }}"
+        data-tier-values="{{ base64_encode(json_encode($tierValues)) }}"
+        data-plat-labels="{{ base64_encode(json_encode($platLabels)) }}"
+        data-plat-values="{{ base64_encode(json_encode($platValues)) }}"
+    ></div>
 
-    new Chart(document.getElementById('signupChart'), {
-        type: 'line',
-        data: {
-            labels: @json($chartLabels),
-            datasets: [{ label: 'New Signups', data: @json($chartSignups), borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.1)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6366f1' }]
-        },
-        options: commonOptions
-    });
-
-    new Chart(document.getElementById('genChart'), {
-        type: 'bar',
-        data: {
-            labels: @json($chartLabels),
-            datasets: [{ label: 'Generations', data: @json($chartGens), backgroundColor: '#8b5cf6', borderRadius: 4 }]
-        },
-        options: commonOptions
-    });
-
-    new Chart(document.getElementById('ratingChart'), {
-        type: 'bar',
-        data: {
-            labels: @json($ratingLabels),
-            datasets: [{ label: 'Ratings', data: @json($ratingValues), backgroundColor: ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'], borderRadius: 4 }]
-        },
-        options: commonOptions
-    });
-
-    new Chart(document.getElementById('tierChart'), {
-        type: 'doughnut',
-        data: {
-            labels: @json($tierLabels),
-            datasets: [{ data: @json($tierValues), backgroundColor: ['#64748b', '#6366f1', '#8b5cf6', '#10b981'], borderWidth: 0 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#64748b', font: { size: 11 } } } } }
-    });
-
-    new Chart(document.getElementById('platChart'), {
-        type: 'bar',
-        data: {
-            labels: @json($platLabels),
-            datasets: [{ label: 'Generations', data: @json($platValues), backgroundColor: ['#6366f1', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#3b82f6'], borderRadius: 4 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' } }, y: { ticks: { color: '#64748b', font: { size: 11 } }, grid: { display: false } } } }
-    });
-</script>
+    <script src="{{ asset('js/admin-dashboard.js') }}"></script>
 @endsection

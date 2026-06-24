@@ -1,0 +1,30 @@
+/* Dark KPI card and admin overrides */
+.kpi-card { background: linear-gradient(180deg, rgba(10,14,22,0.6), rgba(6,10,18,0.6)); border: 1px solid rgba(255,255,255,0.04); box-shadow: 0 8px 30px rgba(2,6,23,0.6); color: #e6eef8; }
+.kpi-card:hover { border-color: rgba(99,102,241,0.12); transform: translateY(-2px); transition: all 0.28s ease; }
+.positive { color: #34d399; }
+.negative { color: #fb7185; }
+.neutral { color: #9aa6b2; }
+.chart-container { position: relative; height: 280px; }
+.table-row:hover { background: rgba(255,255,255,0.02); }
+.pulse-dot { animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
+.star-gold { color: #fbbf24; }
+.dashboard-meta { color: #9aa6b2; }
+.dashboard-meta strong { color: #e6eef8; }
+.dashboard-control { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); color: #e6eef8; }
+.dashboard-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+.dashboard-control:hover { background: rgba(255,255,255,0.03); }
+.kpi-card .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(255,255,255,0.04); }
+/* Adjust common text colors inside KPI cards and tables */
+.kpi-card .text-gray-900, .kpi-card .text-gray-800, .kpi-card .text-gray-700, .kpi-card .text-gray-600 { color: #e6eef8 !important; }
+.kpi-card .text-xs.text-gray-500, .kpi-card .text-xs.text-gray-400, .kpi-card .text-gray-500 { color: #9aa6b2 !important; }
+.kpi-card table thead tr th, .kpi-card table thead { color: #9aa6b2; }
+/* Tier badges and mode badges: dark variants */
+.bg-purple-50, .bg-indigo-50, .bg-gray-100, .bg-emerald-50, .bg-blue-50, .bg-red-50 { background-color: rgba(255,255,255,0.03) !important; color: #e6eef8 !important; border-color: rgba(255,255,255,0.06) !important; }
+.text-purple-700, .text-indigo-700, .text-gray-600, .text-emerald-700, .text-blue-700, .text-red-700 { color: #cbd5e1 !important; }
+/* Table borders */
+.border-gray-200, .divide-gray-100, .border-b, .admin-row { border-color: rgba(255,255,255,0.04) !important; }
+/* Scrollbars */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(15,23,42,0.5); }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }

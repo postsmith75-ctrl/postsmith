@@ -8,9 +8,9 @@
     $trendArrow = fn ($value) => $value >= 0 ? '&#9650;' : '&#9660;';
     $tierClass = function ($tier) {
         return match ($tier) {
-            'pro' => 'bg-purple-500/10 text-purple-200 border border-purple-400/20',
-            'starter' => 'bg-indigo-500/10 text-indigo-200 border border-indigo-400/20',
-            default => 'bg-slate-500/10 text-slate-300 border border-slate-500/30',
+            'pro' => 'bg-purple-50 text-purple-700 border border-purple-200',
+            'starter' => 'bg-indigo-50 text-indigo-700 border border-indigo-200',
+            default => 'bg-gray-100 text-gray-600 border border-gray-200',
         };
     };
     $ago = function ($date) {
@@ -26,40 +26,42 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <style>
-    .kpi-card { background: #071324; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 18px 50px rgba(2,6,23,0.45); }
-    .kpi-card:hover { border-color: #6366f1; transform: translateY(-2px); transition: all 0.3s ease; }
-    .positive { color: #34d399; }
-    .negative { color: #fb7185; }
-    .neutral { color: #94a3b8; }
+    .kpi-card { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(15,23,42,0.08); }
+    .kpi-card:hover { border-color: #c7d2fe; transform: translateY(-2px); transition: all 0.3s ease; }
+    .positive { color: #059669; }
+    .negative { color: #dc2626; }
+    .neutral { color: #64748b; }
     .chart-container { position: relative; height: 280px; }
-    .table-row:hover { background: rgba(30, 41, 59, 0.72); }
+    .table-row:hover { background: #f8fafc; }
     .pulse-dot { animation: pulse-dot 2s infinite; }
     @keyframes pulse-dot { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
     .star-gold { color: #f59e0b; }
-    .kpi-card .text-gray-900, .kpi-card .text-gray-800 { color: #f8fafc; }
-    .kpi-card .text-gray-700, .kpi-card .text-gray-600 { color: #cbd5e1; }
-    .kpi-card .text-gray-500, .kpi-card .text-gray-400 { color: #94a3b8; }
-    .kpi-card .border-gray-200, .kpi-card .border-gray-100 { border-color: #1e293b; }
-    .kpi-card .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1e293b; }
-    .kpi-card .bg-gray-200 { background-color: #334155; }
-    .kpi-card .bg-gray-100 { background-color: #1e293b; }
+    .dashboard-meta { color: #cbd5e1; }
+    .dashboard-meta strong { color: #ffffff; }
+    .dashboard-control { background: #ffffff; border: 1px solid #cbd5e1; color: #334155; }
+    .dashboard-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+    .dashboard-control:hover { background: #f8fafc; }
+    .kpi-card .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #f1f5f9; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15,23,42,0.5); }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
 </style>
 
 <div class="space-y-8">
     <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
             <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">PostSmith Admin</h1>
-            <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500 mt-2">
+            <div class="dashboard-meta flex flex-wrap items-center gap-2 text-xs mt-2">
                 <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
                 <span>Live data as of {{ now()->format('M j, Y g:i A') }}</span>
                 <span class="hidden sm:inline mx-1">|</span>
-                <span>Range: <span class="text-gray-800 font-medium">{{ $startDate->format('M j') }} &mdash; {{ $endDate->format('M j, Y') }}</span></span>
+                <span>Range: <strong class="font-medium">{{ $startDate->format('M j') }} &mdash; {{ $endDate->format('M j, Y') }}</strong></span>
             </div>
         </div>
 
         <div class="flex items-center gap-3 flex-wrap">
             <form method="GET" action="{{ route('admin.dashboard') }}" class="flex items-center gap-2 flex-wrap">
-                <select name="range" onchange="this.form.submit()" class="admin-input text-sm rounded-lg px-3 py-2">
+                <select name="range" onchange="this.form.submit()" class="dashboard-control text-sm rounded-lg px-3 py-2">
                     <option value="7d" @selected($range === '7d')>Last 7 Days</option>
                     <option value="30d" @selected($range === '30d')>Last 30 Days</option>
                     <option value="90d" @selected($range === '90d')>Last 90 Days</option>
@@ -68,12 +70,12 @@
                     <option value="custom" @selected($range === 'custom')>Custom</option>
                 </select>
                 @if ($range === 'custom')
-                    <input type="date" name="start" value="{{ $customStart }}" class="admin-input text-sm rounded-lg px-2 py-2">
-                    <input type="date" name="end" value="{{ $customEnd }}" class="admin-input text-sm rounded-lg px-2 py-2">
+                    <input type="date" name="start" value="{{ $customStart }}" class="dashboard-control text-sm rounded-lg px-2 py-2">
+                    <input type="date" name="end" value="{{ $customEnd }}" class="dashboard-control text-sm rounded-lg px-2 py-2">
                     <button type="submit" class="bg-indigo-600 text-white text-sm px-3 py-2 rounded-lg hover:bg-indigo-700">Apply</button>
                 @endif
             </form>
-            <a href="{{ route('admin.users.export') }}" class="text-xs admin-input text-slate-200 px-3 py-2 rounded-lg hover:border-indigo-400 transition">Export Users</a>
+            <a href="{{ route('admin.users.export') }}" class="dashboard-control text-xs px-3 py-2 rounded-lg transition">Export Users</a>
         </div>
     </div>
 
@@ -241,8 +243,8 @@
                             <td class="py-3 pr-4 text-center text-gray-600">{{ $cohort['total'] }}</td>
                             @foreach ([[$d1, [50, 20]], [$d7, [40, 15]], [$d30, [30, 10]]] as [$percent, $limits])
                                 @php
-                                    $bar = $percent >= $limits[0] ? 'bg-emerald-500' : ($percent >= $limits[1] ? 'bg-yellow-500' : 'bg-red-500');
-                                    $text = $percent >= $limits[0] ? 'positive' : ($percent >= $limits[1] ? 'text-yellow-600' : 'negative');
+                            $bar = $percent >= $limits[0] ? 'bg-emerald-500' : ($percent >= $limits[1] ? 'bg-yellow-500' : 'bg-red-500');
+                            $text = $percent >= $limits[0] ? 'positive' : ($percent >= $limits[1] ? 'text-yellow-600' : 'negative');
                                 @endphp
                                 <td class="py-3 pr-4 text-center">
                                     <div class="inline-flex items-center gap-1">
@@ -371,9 +373,9 @@
                     @forelse ($recentActivity as $activity)
                         @php
                             $modeClass = match ($activity->mode) {
-                                'scratch' => 'bg-blue-500/10 text-blue-200 border border-blue-400/20',
-                                'rewrite' => 'bg-purple-500/10 text-purple-200 border border-purple-400/20',
-                                default => 'bg-emerald-500/10 text-emerald-200 border border-emerald-400/20',
+                                'scratch' => 'bg-blue-50 text-blue-700 border border-blue-200',
+                                'rewrite' => 'bg-purple-50 text-purple-700 border border-purple-200',
+                                default => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
                             };
                         @endphp
                         <tr class="table-row">
@@ -402,10 +404,10 @@
     const commonOptions = {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 11 } } } },
+        plugins: { legend: { labels: { color: '#64748b', font: { size: 11 } } } },
         scales: {
-            x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.12)' } },
-            y: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.12)' } }
+            x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' } },
+            y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' } }
         }
     };
 
@@ -442,7 +444,7 @@
             labels: @json($tierLabels),
             datasets: [{ data: @json($tierValues), backgroundColor: ['#64748b', '#6366f1', '#8b5cf6', '#10b981'], borderWidth: 0 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#cbd5e1', font: { size: 11 } } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#64748b', font: { size: 11 } } } } }
     });
 
     new Chart(document.getElementById('platChart'), {
@@ -451,7 +453,7 @@
             labels: @json($platLabels),
             datasets: [{ label: 'Generations', data: @json($platValues), backgroundColor: ['#6366f1', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#3b82f6'], borderRadius: 4 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.12)' } }, y: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { display: false } } } }
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' } }, y: { ticks: { color: '#64748b', font: { size: 11 } }, grid: { display: false } } } }
     });
 </script>
 @endsection

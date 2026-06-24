@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Auth\EmailAuthController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Postsmith\BillingController;
 use App\Http\Controllers\Postsmith\DashboardController;
@@ -23,7 +24,13 @@ Route::post('/viral-lab', [ViralLabController::class, 'store'])->name('viral-lab
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 Route::post('/logout', [GoogleAuthController::class, 'logout'])->name('logout');
-Route::get('/login', fn () => redirect()->route('auth.google.redirect'))->name('login');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [EmailAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [EmailAuthController::class, 'login'])->name('login.store');
+    Route::get('/register', [EmailAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [EmailAuthController::class, 'register'])->name('register.store');
+});
 
 Route::get('/dev/admin-login', function () {
     abort_unless(app()->environment('local'), 404);
@@ -61,6 +68,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'postsmith.admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users/export', [AdminController::class, 'exportUsers'])->name('users.export');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::get('/drivers', [AdminController::class, 'drivers'])->name('drivers');

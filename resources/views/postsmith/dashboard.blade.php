@@ -122,12 +122,12 @@
             display: flex;
             gap: 12px;
             width: max-content;
-            animation: commentSlide 28s linear infinite;
+            animation: commentSlide 78s linear infinite;
             padding: 12px;
         }
         .comment-rail:hover .comment-track { animation-play-state: paused; }
         .comment-card {
-            width: 260px;
+            width: 390px;
             border: 1px solid rgba(226,232,240,.9);
             background: white;
             border-radius: 14px;
@@ -196,7 +196,7 @@
             .hero-shell { border-radius: 22px; }
             .tab-bar { display: grid; grid-template-columns: 1fr; }
             .tab-btn { justify-content: flex-start; padding: 12px 14px; }
-            .comment-card { width: 230px; }
+            .comment-card { width: 310px; }
             .premium-panel { border-radius: 18px; }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -237,6 +237,7 @@
                         <button type="submit" class="text-xs sm:text-sm bg-gray-900 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium hover:bg-gray-800 transition">Logout</button>
                     </form>
                 @else
+                    <a href="{{ route('register') }}" class="text-xs sm:text-sm bg-gray-900 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium hover:bg-gray-800 transition">Sign up</a>
                     <a href="{{ route('auth.google.redirect') }}" class="text-xs sm:text-sm bg-white border border-gray-300 text-gray-700 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium hover:bg-gray-50 transition flex items-center gap-1.5 sm:gap-2">
                         <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
                         <span class="hidden sm:inline">Sign in with Google</span><span class="sm:hidden">Sign in</span>
@@ -516,7 +517,7 @@
                         <div class="flex items-center gap-2">{!! $icon('check',14,'text-green-500') !!}<span>Discover new engagement drivers</span></div>
                         <div class="flex items-center gap-2">{!! $icon('check',14,'text-green-500') !!}<span>Auto-train the AI engine</span></div>
                     </div>
-                    <a href="{{ route('auth.google.redirect') }}" class="bg-indigo-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-indigo-700 transition inline-block">Sign in with Google</a>
+                    <a href="{{ route('login') }}" class="bg-indigo-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-indigo-700 transition inline-block">Sign in to analyze</a>
                     <p class="text-xs text-gray-400 mt-2">Free users get 1 analysis per month</p>
                 @endauth
             </div>
@@ -618,7 +619,7 @@
                         <li class="flex items-start gap-2">{!! $icon('check',14,'text-green-500 mt-0.5') !!}<span>Star 5 posts max</span></li>
                         <li class="flex items-start gap-2">{!! $icon('check',14,'text-green-500 mt-0.5') !!}<span>Streaks & achievements</span></li>
                     </ul>
-                    <a href="{{ auth()->check() ? route('dashboard') : route('auth.google.redirect') }}" class="block w-full text-center bg-gray-100 text-gray-700 font-semibold py-2.5 rounded-lg hover:bg-gray-200 transition">Sign up free</a>
+                    <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" class="block w-full text-center bg-gray-100 text-gray-700 font-semibold py-2.5 rounded-lg hover:bg-gray-200 transition">Sign up free</a>
                     <p class="text-xs text-gray-400 text-center mt-2">No credit card required</p>
                 </div>
 
@@ -669,54 +670,65 @@
 
         @guest
         <section class="mb-8">
+            @php
+                $testimonials = [
+                    [
+                        'initials' => 'MC',
+                        'name' => 'Dr. Michael Carter',
+                        'title' => 'Research Scientist, University of Michigan',
+                        'quote' => 'I almost stopped sharing my research findings on social media. I would spend hours breaking down complex discoveries into simple posts, only for them to receive a handful of views and almost no engagement. It made me question whether it was worth the effort at all. Then I started using PostSmith. Today, my posts attract thoughtful discussions, insightful comments from other researchers, and even shares from people in my field. For the first time, I feel like my work is actually reaching and helping people.',
+                    ],
+                    [
+                        'initials' => 'SM',
+                        'name' => 'Sarah Mitchell',
+                        'title' => 'Marketing Consultant & Content Creator',
+                        'quote' => 'I used to post on X and then check my notifications every few minutes hoping someone would engage. Most of the time, there was nothing. No comments. No conversations. Just silence. It became surprisingly stressful. Since switching to PostSmith, my content feels more intentional and engaging. Now I regularly receive comments, replies, and meaningful interactions. Instead of feeling anxious after posting, I actually look forward to seeing the conversations that follow.',
+                    ],
+                    [
+                        'initials' => 'DR',
+                        'name' => 'David Reynolds',
+                        'title' => 'Founder, Reynolds Growth Agency',
+                        'quote' => 'What amazes me about PostSmith is its ability to take the smallest idea and turn it into a post people genuinely want to engage with. Before, I\'d spend an hour writing what I thought was the perfect post, and it would barely get noticed. With PostSmith, a simple thought becomes a compelling piece of content that consistently generates reactions, comments, and shares. It\'s like having a world-class content strategist sitting beside me.',
+                    ],
+                    [
+                        'initials' => 'JA',
+                        'name' => 'Jennifer Adams',
+                        'title' => 'Small Business Owner',
+                        'quote' => 'Consistency was always my biggest challenge. I knew I needed to post regularly to grow my business, but coming up with content every day felt exhausting. PostSmith completely removed that mental burden. Now I can turn everyday experiences, customer conversations, and random ideas into engaging content within minutes. My audience has grown significantly, and so has my confidence online.',
+                    ],
+                    [
+                        'initials' => 'MT',
+                        'name' => 'Marcus Thompson',
+                        'title' => 'Software Engineer & Tech Writer',
+                        'quote' => 'I used to think social media success was reserved for influencers and people with massive followings. PostSmith changed my perspective entirely. The platform helped me communicate my ideas more clearly and in a way that resonates with people. My posts now generate discussions, connections, and opportunities that never happened before. The difference has been remarkable.',
+                    ],
+                    [
+                        'initials' => 'OB',
+                        'name' => 'Olivia Bennett',
+                        'title' => 'Career Coach & LinkedIn Creator',
+                        'quote' => 'Before PostSmith, I knew what I wanted to say but struggled with how to say it. My ideas were good, but my posts never reflected their true value. PostSmith helped me transform those ideas into content that captures attention and drives engagement. Within weeks, I saw more comments, profile visits, and client inquiries than I had in months.',
+                    ],
+                ];
+            @endphp
             <div class="text-center mb-5">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600">What creators are saying</p>
                 <h2 class="text-2xl sm:text-3xl font-bold logo-text text-slate-950 mt-2">Built for posts people actually answer.</h2>
             </div>
             <div class="comment-rail" aria-label="Creator comments">
                 <div class="comment-track">
-                    <div class="comment-card">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="avatar-dot">AM</span>
-                            <div><p class="text-sm font-bold text-slate-900">Ada M.</p><p class="text-xs text-slate-400">Newsletter creator</p></div>
+                    @foreach (array_merge($testimonials, $testimonials) as $testimonial)
+                        <div class="comment-card">
+                            <div class="text-amber-400 text-xs tracking-wide mb-3" aria-label="5 stars">★★★★★</div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="avatar-dot">{{ $testimonial['initials'] }}</span>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-900">{{ $testimonial['name'] }}</p>
+                                    <p class="text-xs text-slate-400">{{ $testimonial['title'] }}</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-6">"{{ $testimonial['quote'] }}"</p>
                         </div>
-                        <p class="text-sm text-slate-600 leading-6">"It took my rough thought and gave me a hook I would actually post."</p>
-                    </div>
-                    <div class="comment-card">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="avatar-dot">CJ</span>
-                            <div><p class="text-sm font-bold text-slate-900">CJ O.</p><p class="text-xs text-slate-400">Community builder</p></div>
-                        </div>
-                        <p class="text-sm text-slate-600 leading-6">"The driver angles make testing posts feel much more intentional."</p>
-                    </div>
-                    <div class="comment-card">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="avatar-dot">TN</span>
-                            <div><p class="text-sm font-bold text-slate-900">Tomi N.</p><p class="text-xs text-slate-400">Founder</p></div>
-                        </div>
-                        <p class="text-sm text-slate-600 leading-6">"It sounds like me, just clearer and sharper."</p>
-                    </div>
-                    <div class="comment-card">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="avatar-dot">AM</span>
-                            <div><p class="text-sm font-bold text-slate-900">Ada M.</p><p class="text-xs text-slate-400">Newsletter creator</p></div>
-                        </div>
-                        <p class="text-sm text-slate-600 leading-6">"It took my rough thought and gave me a hook I would actually post."</p>
-                    </div>
-                    <div class="comment-card">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="avatar-dot">CJ</span>
-                            <div><p class="text-sm font-bold text-slate-900">CJ O.</p><p class="text-xs text-slate-400">Community builder</p></div>
-                        </div>
-                        <p class="text-sm text-slate-600 leading-6">"The driver angles make testing posts feel much more intentional."</p>
-                    </div>
-                    <div class="comment-card">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="avatar-dot">TN</span>
-                            <div><p class="text-sm font-bold text-slate-900">Tomi N.</p><p class="text-xs text-slate-400">Founder</p></div>
-                        </div>
-                        <p class="text-sm text-slate-600 leading-6">"It sounds like me, just clearer and sharper."</p>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </section>

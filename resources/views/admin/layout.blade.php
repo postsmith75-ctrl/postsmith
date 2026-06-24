@@ -25,9 +25,9 @@
         .pagination a, .pagination span { border-color: #334155 !important; background-color: #0f172a !important; color: #cbd5e1 !important; }
         .pagination [aria-current="page"] span { background-color: #4f46e5 !important; color: #fff !important; border-color: #6366f1 !important; }
     </style>
-    <link rel="stylesheet" href="{{ asset('css/admin-dark.css') }}">
-</head>
-<body class="text-slate-100 antialiased">
+        <link rel="stylesheet" href="{{ asset('css/admin-dark.css') }}">
+    </head>
+    <body class="admin-theme text-slate-100 antialiased">
     <div class="min-h-screen">
         <header class="bg-[#071324]/95 backdrop-blur border-b border-white/5 sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">

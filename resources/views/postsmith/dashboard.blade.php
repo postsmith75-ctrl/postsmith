@@ -321,7 +321,7 @@
                                 $usageLimit = $usage['limit'] ?? 0;
                                 $usagePercent = $usageLimit > 0 ? min(100, round((($usage['used'] ?? 0) / $usageLimit) * 100)) : 0;
                             @endphp
-                            <div class="usage-bar-fill bg-indigo-600" style="width: {{ $usagePercent }}%"></div>
+                            <div class="usage-bar-fill bg-indigo-600 js-usage-bar" data-usage-percent="{{ $usagePercent }}"></div>
                         </div>
                     </div>
                     <div class="workspace-card">
@@ -528,7 +528,9 @@
         </section>
 
         @if (session('viral_analysis'))
-            @php($viralAnalysis = session('viral_analysis'))
+            @php
+                $viralAnalysis = session('viral_analysis');
+            @endphp
             <section class="mb-8 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 fade-in">
                 <div class="flex items-center justify-between gap-4 flex-wrap mb-4">
                     <h2 class="text-xl font-bold logo-text text-slate-950 flex items-center gap-2">{!! $icon('flask',18) !!} Viral Lab Analysis</h2>
@@ -861,15 +863,31 @@
         </footer>
     </div>
 
+    <div
+        id="postsmith-config"
+        class="hidden"
+        data-flw-public-key="{{ config('postsmith.payments.flutterwave_public_key') }}"
+        data-flw-currency="{{ config('postsmith.payments.currency') }}"
+        data-billing-verify-url="{{ route('billing.flutterwave.verify') }}"
+        data-auth-redirect-url="{{ route('auth.google.redirect') }}"
+        data-auth-user='@json(auth()->check() ? ['id' => auth()->id(), 'email' => auth()->user()->email, 'name' => auth()->user()->name ?: auth()->user()->email] : null, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)'
+        data-starter-monthly="{{ (float) config('postsmith.tiers.starter.checkout_monthly_price') }}"
+        data-starter-annual="{{ (float) config('postsmith.tiers.starter.checkout_annual_price') }}"
+        data-pro-monthly="{{ (float) config('postsmith.tiers.pro.checkout_monthly_price') }}"
+        data-pro-annual="{{ (float) config('postsmith.tiers.pro.checkout_annual_price') }}"
+    ></div>
+    <template id="icon-check-template">{!! $icon('check', 14) !!}</template>
+
     <script>
-        var FLW_PUBLIC_KEY = @json(config('postsmith.payments.flutterwave_public_key'));
-        var FLW_CURRENCY = @json(config('postsmith.payments.currency'));
-        var BILLING_VERIFY_URL = @json(route('billing.flutterwave.verify'));
-        var AUTH_REDIRECT_URL = @json(route('auth.google.redirect'));
-        var AUTH_USER = @json(auth()->check() ? ['id' => auth()->id(), 'email' => auth()->user()->email, 'name' => auth()->user()->name ?: auth()->user()->email] : null);
+        var POSTSMITH_CONFIG = document.getElementById('postsmith-config').dataset;
+        var FLW_PUBLIC_KEY = POSTSMITH_CONFIG.flwPublicKey;
+        var FLW_CURRENCY = POSTSMITH_CONFIG.flwCurrency;
+        var BILLING_VERIFY_URL = POSTSMITH_CONFIG.billingVerifyUrl;
+        var AUTH_REDIRECT_URL = POSTSMITH_CONFIG.authRedirectUrl;
+        var AUTH_USER = JSON.parse(POSTSMITH_CONFIG.authUser);
         var PLAN_AMOUNTS = {
-            starter: { monthly: {{ (float) config('postsmith.tiers.starter.checkout_monthly_price') }}, annual: {{ (float) config('postsmith.tiers.starter.checkout_annual_price') }} },
-            pro: { monthly: {{ (float) config('postsmith.tiers.pro.checkout_monthly_price') }}, annual: {{ (float) config('postsmith.tiers.pro.checkout_annual_price') }} }
+            starter: { monthly: Number(POSTSMITH_CONFIG.starterMonthly), annual: Number(POSTSMITH_CONFIG.starterAnnual) },
+            pro: { monthly: Number(POSTSMITH_CONFIG.proMonthly), annual: Number(POSTSMITH_CONFIG.proAnnual) }
         };
 
         function switchMode(mode) {
@@ -962,7 +980,8 @@
             if (!navigator.clipboard) return;
             navigator.clipboard.writeText(text).then(function() {
                 var original = btn.innerHTML;
-                btn.innerHTML = '{!! $icon('check',14) !!} Copied!';
+                var checkIcon = document.getElementById('icon-check-template').innerHTML;
+                btn.innerHTML = checkIcon + ' Copied!';
                 btn.classList.remove('bg-gray-900');
                 btn.classList.add('bg-green-600');
                 setTimeout(function() {
@@ -978,6 +997,11 @@
                 var overlay = document.getElementById('loading-overlay');
                 if (overlay) overlay.classList.add('active');
             });
+        });
+
+        document.querySelectorAll('.js-usage-bar').forEach(function(bar) {
+            var percent = Number(bar.dataset.usagePercent || 0);
+            bar.style.width = Math.max(0, Math.min(100, percent)) + '%';
         });
     </script>
 </body>

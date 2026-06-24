@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\DiscoveredDriver;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
@@ -41,5 +42,27 @@ class AdminTest extends TestCase
 
         $this->assertSame('active', $driver->refresh()->status);
         $this->assertNotNull($driver->promoted_at);
+    }
+
+    public function test_local_dev_admin_credentials_can_view_admin_dashboard(): void
+    {
+        $admin = User::factory()->create([
+            'name' => 'PostSmith Admin',
+            'email' => 'admin@postsmith.local',
+            'password' => 'Admin@12345',
+            'role' => 'admin',
+            'tier' => 'pro',
+        ]);
+
+        $this->assertTrue(Hash::check('Admin@12345', $admin->password));
+
+        $this->post(route('login.store'), [
+            'email' => 'admin@postsmith.local',
+            'password' => 'Admin@12345',
+        ])->assertRedirect(route('dashboard'));
+
+        $this->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('PostSmith Admin');
     }
 }

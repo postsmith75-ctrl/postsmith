@@ -13,7 +13,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 Route::get('/', DashboardController::class)->name('dashboard');
 Route::view('/terms', 'legal.terms')->name('terms');
@@ -35,13 +34,16 @@ Route::middleware('guest')->group(function () {
 Route::get('/dev/admin-login', function () {
     abort_unless(app()->environment('local'), 404);
 
+    $adminEmail = 'admin@postsmith.local';
+    $adminPassword = 'Admin@12345';
+
     $user = User::firstOrCreate(
-        ['email' => 'admin@postsmith.local'],
+        ['email' => $adminEmail],
         [
             'name' => 'PostSmith Admin',
             'role' => 'admin',
             'tier' => 'pro',
-            'password' => Hash::make(Str::random(40)),
+            'password' => $adminPassword,
             'email_verified' => true,
             'generations_reset_at' => now(),
             'pro_expires_at' => now()->addYear(),
@@ -51,6 +53,8 @@ Route::get('/dev/admin-login', function () {
     $user->forceFill([
         'role' => 'admin',
         'tier' => 'pro',
+        'password' => $adminPassword,
+        'email_verified' => true,
         'pro_expires_at' => $user->pro_expires_at ?: now()->addYear(),
     ])->save();
 

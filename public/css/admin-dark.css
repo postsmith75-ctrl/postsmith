@@ -1,8 +1,8 @@
 /* Dark KPI card and admin overrides (scoped to admin pages) */
 @keyframes pulse-dot { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
 
-.admin-theme .kpi-card { background: linear-gradient(180deg, rgba(10,14,22,0.6), rgba(6,10,18,0.6)); border: 1px solid rgba(255,255,255,0.04); box-shadow: 0 8px 30px rgba(2,6,23,0.6); color: #e6eef8; }
-.admin-theme .kpi-card:hover { border-color: rgba(99,102,241,0.12); transform: translateY(-2px); transition: all 0.28s ease; }
+.admin-theme .kpi-card { background: #111827; border: 1px solid #263244; border-radius: 12px !important; box-shadow: none; color: #e6eef8; }
+.admin-theme .kpi-card:hover { border-color: #334155; transition: border-color 0.2s ease, background-color 0.2s ease; }
 .admin-theme .positive { color: #34d399; }
 .admin-theme .negative { color: #fb7185; }
 .admin-theme .neutral { color: #9aa6b2; }
@@ -12,19 +12,19 @@
 .admin-theme .star-gold { color: #fbbf24; }
 .admin-theme .dashboard-meta { color: #9aa6b2; }
 .admin-theme .dashboard-meta strong { color: #e6eef8; }
-.admin-theme .dashboard-control { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); color: #e6eef8; }
-.admin-theme .dashboard-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
-.admin-theme .dashboard-control:hover { background: rgba(255,255,255,0.03); }
-.admin-theme .kpi-card .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(255,255,255,0.04); }
+.admin-theme .dashboard-control { background: #0f172a; border: 1px solid #334155; color: #e6eef8; }
+.admin-theme .dashboard-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.14); }
+.admin-theme .dashboard-control:hover { background: #162033; }
+.admin-theme .kpi-card .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #263244; }
 /* Adjust common text colors inside KPI cards and tables */
 .admin-theme .kpi-card .text-gray-900, .admin-theme .kpi-card .text-gray-800, .admin-theme .kpi-card .text-gray-700, .admin-theme .kpi-card .text-gray-600 { color: #e6eef8 !important; }
 .admin-theme .kpi-card .text-xs.text-gray-500, .admin-theme .kpi-card .text-xs.text-gray-400, .admin-theme .kpi-card .text-gray-500 { color: #9aa6b2 !important; }
 .admin-theme .kpi-card table thead tr th, .admin-theme .kpi-card table thead { color: #9aa6b2; }
 /* Tier badges and mode badges: dark variants */
-.admin-theme .bg-purple-50, .admin-theme .bg-indigo-50, .admin-theme .bg-gray-100, .admin-theme .bg-emerald-50, .admin-theme .bg-blue-50, .admin-theme .bg-red-50 { background-color: rgba(255,255,255,0.03) !important; color: #e6eef8 !important; border-color: rgba(255,255,255,0.06) !important; }
+.admin-theme .bg-purple-50, .admin-theme .bg-indigo-50, .admin-theme .bg-gray-100, .admin-theme .bg-emerald-50, .admin-theme .bg-blue-50, .admin-theme .bg-red-50 { background-color: #162033 !important; color: #e6eef8 !important; border-color: #263244 !important; }
 .admin-theme .text-purple-700, .admin-theme .text-indigo-700, .admin-theme .text-gray-600, .admin-theme .text-emerald-700, .admin-theme .text-blue-700, .admin-theme .text-red-700 { color: #cbd5e1 !important; }
 /* Table borders */
-.admin-theme .border-gray-200, .admin-theme .divide-gray-100, .admin-theme .border-b, .admin-theme .admin-row { border-color: rgba(255,255,255,0.04) !important; }
+.admin-theme .border-gray-200, .admin-theme .divide-gray-100, .admin-theme .border-b, .admin-theme .admin-row { border-color: #263244 !important; }
 /* Scrollbars (scoped) */
 .admin-theme ::-webkit-scrollbar { width: 6px; height: 6px; }
 .admin-theme ::-webkit-scrollbar-track { background: rgba(15,23,42,0.5); }

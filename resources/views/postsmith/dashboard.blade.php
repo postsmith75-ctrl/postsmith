@@ -42,47 +42,41 @@
             background: #ffffff;
         }
         .logo-text { font-weight: 700; letter-spacing: -0.03em; }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -8px rgba(0,0,0,0.12); }
+        .card-hover { transition: border-color 0.2s ease, background-color 0.2s ease; }
+        .card-hover:hover { border-color: #c7d2fe; background-color: #fbfdff; }
         .copy-btn { transition: all 0.2s; }
         .copy-btn:active { transform: scale(0.96); }
         .fade-in { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideIn { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); } 50% { box-shadow: 0 0 20px 4px rgba(99, 102, 241, 0.2); } }
+        @keyframes pulse-glow { 0%, 100% { border-color: #c7d2fe; } 50% { border-color: #818cf8; } }
         @keyframes commentSlide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .pro-wall-overlay { background: rgba(49, 46, 129, 0.55) !important; backdrop-filter: blur(4px) !important; }
         .pro-wall-card { animation: pulse-glow 2s ease-in-out infinite; }
-        .analysis-box { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+        .analysis-box { background: #111827; }
         .post-text { line-height: 1.65; }
-        .glass-nav { background: rgba(255,255,255,0.82); backdrop-filter: blur(18px); box-shadow: 0 1px 0 rgba(148,163,184,.22); }
+        .glass-nav { background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid #e2e8f0; }
         .hero-shell {
-            border: 1px solid rgba(199,210,254,.78);
-            background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(248,250,252,.92));
-            box-shadow: 0 28px 80px -40px rgba(49,46,129,.55);
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 14px !important;
             position: relative;
             overflow: hidden;
         }
         .hero-shell::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(90deg, rgba(79,70,229,.08), transparent 32%, rgba(16,185,129,.08)),
-                repeating-linear-gradient(90deg, rgba(15,23,42,.035) 0 1px, transparent 1px 72px);
-            pointer-events: none;
+            display: none;
         }
         .premium-panel {
-            border: 1px solid rgba(226,232,240,.95);
-            background: rgba(255,255,255,.94);
-            box-shadow: 0 22px 60px -36px rgba(15,23,42,.55);
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 14px !important;
         }
         .eyebrow {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             border: 1px solid #c7d2fe;
-            background: #eef2ff;
+            background: #f5f7ff;
             color: #3730a3;
             border-radius: 999px;
             padding: 7px 12px;
@@ -90,15 +84,15 @@
             font-weight: 700;
         }
         .proof-card {
-            border: 1px solid rgba(226,232,240,.9);
-            background: rgba(255,255,255,.76);
-            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 10px;
             padding: 14px;
         }
         .comment-rail {
-            border: 1px solid rgba(226,232,240,.9);
-            background: rgba(255,255,255,.68);
-            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 12px;
             overflow: hidden;
             position: relative;
         }
@@ -126,9 +120,9 @@
             width: 390px;
             border: 1px solid rgba(226,232,240,.9);
             background: white;
-            border-radius: 14px;
+            border-radius: 10px;
             padding: 14px;
-            box-shadow: 0 12px 26px -22px rgba(15,23,42,.65);
+            box-shadow: none;
         }
         .avatar-dot {
             width: 30px;
@@ -139,43 +133,40 @@
             color: white;
             font-size: 11px;
             font-weight: 700;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: #4f46e5;
         }
         .signal-card {
-            border: 1px solid rgba(226,232,240,.95);
-            background: rgba(255,255,255,.78);
-            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 12px;
             padding: 18px;
-            box-shadow: 0 18px 45px -35px rgba(15,23,42,.6);
         }
-        .pricing-card { transition: all 0.2s; border: 2px solid transparent; }
-        .pricing-card:hover { border-color: #6366f1; transform: translateY(-2px); }
+        .pricing-card { transition: border-color 0.2s, background-color 0.2s; border: 1px solid #e5e7eb; border-radius: 12px !important; }
+        .pricing-card:hover { border-color: #a5b4fc; background-color: #fbfdff; }
         .workspace-card {
-            border: 1px solid rgba(226,232,240,.95);
-            background: rgba(255,255,255,.86);
-            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 12px;
             padding: 18px;
-            box-shadow: 0 18px 50px -38px rgba(15,23,42,.65);
         }
         .before-after {
-            border: 1px solid rgba(226,232,240,.95);
-            background: rgba(255,255,255,.84);
-            border-radius: 22px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 22px 60px -42px rgba(15,23,42,.7);
         }
         .tool-header {
-            background: linear-gradient(135deg, #111827, #312e81);
+            background: #111827;
             color: white;
-            border-radius: 18px 18px 0 0;
+            border-radius: 14px 14px 0 0;
         }
         .tab-bar { background: #f1f5f9; border-radius: 16px; padding: 6px; display: flex; gap: 4px; max-width: none; }
         .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; border-radius: 12px; font-size: 14px; font-weight: 500; color: #64748b; transition: all 0.2s; border: none; background: transparent; cursor: pointer; }
-        .tab-btn.active { background: white; color: #4338ca; box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-weight: 600; }
+        .tab-btn.active { background: white; color: #4338ca; border: 1px solid #e0e7ff; font-weight: 600; }
         .tab-btn:hover:not(.active) { color: #334155; }
         #loading-overlay.active { opacity: 1; pointer-events: auto; }
         .forge-chip { transition: all 0.2s ease; }
-        .forge-chip:hover { transform: translateY(-1px); }
+        .forge-chip:hover { border-color: #a5b4fc; }
         .forge-chip input:checked + span { background: #4f46e5; color: white; border-color: #4f46e5; }
         .tooltip { position: relative; }
         .tooltip .tooltiptext { visibility: hidden; width: 280px; background: #1e293b; color: #fff; text-align: left; border-radius: 8px; padding: 10px 12px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -140px; opacity: 0; transition: opacity 0.2s; font-size: 12px; line-height: 1.5; }
@@ -185,15 +176,16 @@
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1f2937; color: white; padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 500; z-index: 1000; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
         .toast.show { opacity: 1; }
         .regen-btn { transition: all 0.2s ease; }
-        .regen-btn:hover { background-color: #f5f3ff; border-color: #6366f1; color: #4f46e5; transform: translateY(-1px); }
+        .regen-btn:hover { background-color: #f5f3ff; border-color: #6366f1; color: #4f46e5; }
         textarea, select { box-shadow: 0 1px 2px rgba(15,23,42,.04); }
         textarea::placeholder { color: #94a3b8; }
+        .before-after img { box-shadow: none !important; }
         @media (max-width: 640px) {
-            .hero-shell { border-radius: 22px; }
+            .hero-shell { border-radius: 14px; }
             .tab-bar { display: grid; grid-template-columns: 1fr; }
             .tab-btn { justify-content: flex-start; padding: 12px 14px; }
             .comment-card { width: 310px; }
-            .premium-panel { border-radius: 18px; }
+            .premium-panel { border-radius: 14px; }
         }
         @media (prefers-reduced-motion: reduce) {
             .comment-track { animation: none; }
@@ -204,7 +196,7 @@
     <div id="loading-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[100] opacity-0 pointer-events-none transition-opacity duration-300">
         <div class="flex flex-col items-center justify-center text-center w-full h-full">
             <div class="max-w-sm px-6">
-                <div class="w-[200px] h-[200px] mx-auto mb-[30px] rounded-full bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 flex items-center justify-center shadow-lg shadow-indigo-500/10">
+                <div class="w-[200px] h-[200px] mx-auto mb-[30px] rounded-full bg-white border border-indigo-100 flex items-center justify-center">
                     <img src="{{ asset('postsmith-logo-mark.png') }}" alt="PostSmith" class="w-32 h-32 object-contain">
                 </div>
                 <h3 class="text-xl font-bold logo-text text-gray-900 mb-2 mt-1">Forging your post...</h3>
@@ -433,7 +425,7 @@
                         <p class="text-xs text-gray-400 mt-1" id="gen-count-scratch">{{ count($drivers) }} of 5 selected</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
-                        <button type="submit" id="gen-btn-scratch" class="w-full sm:w-auto justify-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold px-8 py-3 rounded-lg hover:shadow-lg hover:from-indigo-700 hover:to-purple-700 transition transform hover:-translate-y-0.5 flex items-center gap-2">{!! $icon('rocket',16) !!} Forge My Post</button>
+                        <button type="submit" id="gen-btn-scratch" class="w-full sm:w-auto justify-center bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">{!! $icon('rocket',16) !!} Forge My Post</button>
                     </div>
                 </form>
             </div>
@@ -479,7 +471,7 @@
                         <p class="text-xs text-gray-400 mt-1" id="gen-count-rewrite">{{ count($drivers) }} of 5 selected</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
-                        <button type="submit" id="gen-btn-rewrite" class="w-full sm:w-auto justify-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:shadow-lg hover:from-purple-700 hover:to-indigo-700 transition transform hover:-translate-y-0.5 flex items-center gap-2">{!! $icon('search',16) !!} Fix My Post</button>
+                        <button type="submit" id="gen-btn-rewrite" class="w-full sm:w-auto justify-center bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">{!! $icon('search',16) !!} Fix My Post</button>
                     </div>
                 </form>
             </div>
@@ -504,7 +496,7 @@
                             <input type="number" name="comments" min="0" placeholder="Comments" class="px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" required>
                             <input type="number" name="shares" min="0" placeholder="Shares" class="px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" required>
                         </div>
-                        <button type="submit" class="w-full sm:w-auto justify-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:shadow-lg hover:from-purple-700 hover:to-indigo-700 transition transform hover:-translate-y-0.5 flex items-center gap-2">{!! $icon('flask',16) !!} Analyze Post</button>
+                        <button type="submit" class="w-full sm:w-auto justify-center bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">{!! $icon('flask',16) !!} Analyze Post</button>
                         <p class="text-xs text-gray-400">Minimums: {{ config('postsmith.viral_lab.min_words') }} words, {{ config('postsmith.viral_lab.min_likes') }} likes, {{ config('postsmith.viral_lab.min_comments') }} comments, {{ config('postsmith.viral_lab.min_shares') }} shares.</p>
                     </form>
                 @else
@@ -564,13 +556,13 @@
                     <img
                         src="{{ asset('before-after-postsmith.png') }}"
                         alt="Before and after example showing a post improving from 35 reactions and 3 comments to 3,279 reactions and 245 comments"
-                        class="hidden sm:block w-full rounded-xl border border-slate-200 shadow-lg shadow-slate-200/60"
+                        class="hidden sm:block w-full rounded-xl border border-slate-200"
                         loading="lazy"
                     >
                     <img
                         src="{{ asset('before-after-postsmith-mobile.png') }}"
                         alt="Mobile before and after example showing a post improving from 35 reactions and 3 comments to 3,279 reactions and 245 comments"
-                        class="sm:hidden w-full rounded-xl border border-slate-200 shadow-lg shadow-slate-200/60"
+                        class="sm:hidden w-full rounded-xl border border-slate-200"
                         loading="lazy"
                     >
                 </div>
@@ -793,7 +785,7 @@
             <div class="flex items-center justify-between mb-2 flex-wrap gap-4">
                 <div><h3 class="text-xl font-bold logo-text flex items-center gap-2">{!! $icon('chart',18) !!} Your Performance</h3></div>
                 @if ($stats['best_driver'])
-                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 px-4 py-2 rounded-lg"><span class="text-sm font-semibold text-indigo-800 flex items-center gap-1">{!! $icon('star',14) !!} Your best format: {{ $stats['best_driver'] }}</span></div>
+                    <div class="bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-lg"><span class="text-sm font-semibold text-indigo-800 flex items-center gap-1">{!! $icon('star',14) !!} Your best format: {{ $stats['best_driver'] }}</span></div>
                 @endif
             </div>
             <p class="text-sm text-gray-500 mb-6 max-w-2xl">Log your results after posting. We analyze what works across the community to keep improving PostSmith's engine.</p>

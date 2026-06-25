@@ -346,7 +346,7 @@
                     </div>
                 </div>
 
-                <div class="workspace-card mt-4">
+                <div class="workspace-card mt-4" id="plan-actions">
                     <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                         <div>
                             <p class="text-sm font-bold text-slate-950 mb-2">Billing</p>
@@ -368,16 +368,40 @@
                                 <input id="billing-auto-renew" type="checkbox" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" @checked(auth()->user()->billing_auto_renew)>
                                 Auto-renew this plan after successful checkout
                             </label>
+                            @if (! auth()->user()->isPro() && ! auth()->user()->isAdmin())
+                                <div class="mt-4 rounded-lg border border-indigo-100 bg-indigo-50 px-4 py-3">
+                                    @if (auth()->user()->isStarter())
+                                        <p class="text-sm font-bold text-indigo-950">Upgrade to Pro when you need the full publishing workflow.</p>
+                                        <p class="text-xs text-indigo-700 mt-1">Pro adds 1,000 monthly generations, unlimited Viral Lab, CSV export, global drivers, and direct publishing access.</p>
+                                    @else
+                                        <p class="text-sm font-bold text-indigo-950">Upgrade when your current monthly limit starts slowing you down.</p>
+                                        <p class="text-xs text-indigo-700 mt-1">Starter gives you 200 generations, 5 Viral Lab analyses, 90-day history, unlimited starred posts, and RSS feed access.</p>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                         <div class="flex flex-col sm:flex-row gap-2">
-                            <button
-                                type="button"
-                                data-billing-checkout
-                                data-tier="{{ auth()->user()->tier === 'starter' ? 'starter' : 'pro' }}"
-                                data-plan="{{ auth()->user()->billing_plan ?: 'monthly' }}"
-                                class="bg-slate-900 text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-slate-800 transition"
-                            >Update billing card</button>
-                            <a href="#pricing" class="bg-indigo-50 text-indigo-700 px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-indigo-100 transition text-center">Change plan</a>
+                            @if (auth()->user()->isPro() || auth()->user()->isAdmin())
+                                <button
+                                    type="button"
+                                    data-billing-checkout
+                                    data-tier="pro"
+                                    data-plan="{{ auth()->user()->billing_plan ?: 'monthly' }}"
+                                    class="bg-slate-900 text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-slate-800 transition"
+                                >Update billing card</button>
+                            @elseif (auth()->user()->isStarter())
+                                <button type="button" data-billing-checkout data-tier="pro" data-plan="monthly" class="bg-purple-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-purple-700 transition">Upgrade to Pro</button>
+                                <button
+                                    type="button"
+                                    data-billing-checkout
+                                    data-tier="starter"
+                                    data-plan="{{ auth()->user()->billing_plan ?: 'monthly' }}"
+                                    class="bg-white border border-slate-300 text-slate-700 px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-slate-50 transition"
+                                >Update card</button>
+                            @else
+                                <button type="button" data-billing-checkout data-tier="starter" data-plan="monthly" class="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-indigo-700 transition">Upgrade to Starter</button>
+                                <button type="button" data-billing-checkout data-tier="pro" data-plan="monthly" class="bg-white border border-purple-200 text-purple-700 px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-purple-50 transition">Upgrade to Pro</button>
+                            @endif
                         </div>
                     </div>
                     @if ($recentPayments->isNotEmpty())
@@ -500,7 +524,7 @@
                         <div class="text-xs sm:text-sm">
                             <p class="font-bold {{ $generationBlocked ? 'text-red-600' : 'text-indigo-700' }}">{{ $generationCountLabel }}</p>
                             @if ($generationBlocked)
-                                <a href="#pricing" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade to keep generating.</a>
+                                <a href="{{ auth()->check() ? '#plan-actions' : '#pricing' }}" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade to keep generating.</a>
                             @else
                                 <p class="text-slate-400">{{ $afterGenerationLabel }}</p>
                             @endif
@@ -554,7 +578,7 @@
                         <div class="text-xs sm:text-sm">
                             <p class="font-bold {{ $generationBlocked ? 'text-red-600' : 'text-indigo-700' }}">{{ $generationCountLabel }}</p>
                             @if ($generationBlocked)
-                                <a href="#pricing" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade to keep rewriting.</a>
+                                <a href="{{ auth()->check() ? '#plan-actions' : '#pricing' }}" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade to keep rewriting.</a>
                             @else
                                 <p class="text-slate-400">{{ $afterGenerationLabel }}</p>
                             @endif
@@ -588,7 +612,7 @@
                             <div class="text-xs sm:text-sm">
                                 <p class="font-bold {{ $viralBlocked ? 'text-red-600' : 'text-indigo-700' }}">{{ $viralCountLabel }}</p>
                                 @if ($viralBlocked)
-                                    <a href="#pricing" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade for more analyses.</a>
+                                    <a href="{{ auth()->check() ? '#plan-actions' : '#pricing' }}" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade for more analyses.</a>
                                 @endif
                             </div>
                         </div>
@@ -685,6 +709,7 @@
         </section>
         @endguest
 
+        @guest
         <section id="pricing" class="mb-12 fade-in scroll-mt-24">
             <div class="text-center mb-10">
                 <h2 class="text-3xl sm:text-4xl font-bold logo-text mb-3 text-slate-950">Simple, usage-aligned pricing</h2>
@@ -750,6 +775,7 @@
             </div>
             <p class="text-center text-xs text-gray-400 mt-6">Annual plans are 20% off for the first year. Secured by Flutterwave.</p>
         </section>
+        @endguest
 
         @guest
         <section class="mb-8">
@@ -885,12 +911,12 @@
                         @if ($canExportCsv)
                             <a href="{{ route('posts.export') }}" class="inline-flex items-center gap-1.5 bg-slate-900 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate-800 transition">{!! $icon('file',14) !!} Export CSV</a>
                         @else
-                            <a href="#pricing" class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-500 px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition">{!! $icon('lock',14) !!} CSV on Pro</a>
+                            <a href="#plan-actions" class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-500 px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition">{!! $icon('lock',14) !!} CSV on Pro</a>
                         @endif
                         @if ($canUseRss && auth()->user()->z_rss_token)
                             <a href="{{ route('posts.rss', auth()->user()->z_rss_token) }}" class="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">{!! $icon('file',14) !!} RSS Feed</a>
                         @else
-                            <a href="#pricing" class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-500 px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition">{!! $icon('lock',14) !!} RSS on Starter</a>
+                            <a href="#plan-actions" class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-500 px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition">{!! $icon('lock',14) !!} RSS on Starter</a>
                         @endif
                     @endauth
                 </div>

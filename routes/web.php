@@ -23,6 +23,7 @@ Route::post('/viral-lab', [ViralLabController::class, 'store'])->name('viral-lab
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 Route::post('/logout', [GoogleAuthController::class, 'logout'])->name('logout');
+Route::post('/billing/flutterwave/webhook', [BillingController::class, 'flutterwaveWebhook'])->name('billing.flutterwave.webhook');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [EmailAuthController::class, 'showLogin'])->name('login');
@@ -64,6 +65,10 @@ Route::get('/dev/admin-login', function () {
 })->name('dev.admin-login');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', [EmailAuthController::class, 'showVerify'])->name('verification.notice');
+    Route::post('/email/verify', [EmailAuthController::class, 'verifyEmail'])->name('verification.verify');
+    Route::post('/email/verification-notification', [EmailAuthController::class, 'resendVerification'])->name('verification.send');
+    Route::post('/billing/flutterwave/intent', [BillingController::class, 'createFlutterwaveIntent'])->name('billing.flutterwave.intent');
     Route::get('/billing/flutterwave/verify', [BillingController::class, 'verifyFlutterwave'])->name('billing.flutterwave.verify');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::patch('/posts/{post}/metrics', [PostController::class, 'updateMetrics'])->name('posts.metrics');

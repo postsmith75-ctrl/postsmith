@@ -58,6 +58,7 @@ class DashboardController extends Controller
             'posts' => $posts,
             'stats' => $stats,
             'usage' => $usageManager->status($user),
+            'recentPayments' => $user ? $user->payments()->where('status', 'paid')->latest('paid_at')->limit(5)->get() : collect(),
         ]);
     }
 }

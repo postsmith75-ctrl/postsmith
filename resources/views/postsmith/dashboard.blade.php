@@ -27,6 +27,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>PostSmith - Turn Any Thought Into a Post That Gets Likes, Comments & Shares</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
@@ -323,6 +324,55 @@
                         </p>
                     </div>
                 </div>
+
+                <div class="workspace-card mt-4">
+                    <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                        <div>
+                            <p class="text-sm font-bold text-slate-950 mb-2">Billing</p>
+                            <p class="text-sm text-slate-500 leading-6">
+                                {{ ucfirst(auth()->user()->tier) }}{{ auth()->user()->billing_plan ? ' / '.auth()->user()->billing_plan : '' }}
+                                @if (auth()->user()->pro_expires_at)
+                                    · renews or expires {{ auth()->user()->pro_expires_at->format('M j, Y') }}
+                                @endif
+                            </p>
+                            <p class="text-sm text-slate-500 leading-6 mt-1">
+                                Card:
+                                @if (auth()->user()->billing_card_last_four)
+                                    {{ auth()->user()->billing_card_brand ?: 'Card' }} ending {{ auth()->user()->billing_card_last_four }}
+                                @else
+                                    No saved card metadata
+                                @endif
+                            </p>
+                            <label class="inline-flex items-center gap-2 text-sm text-slate-600 mt-3">
+                                <input id="billing-auto-renew" type="checkbox" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" @checked(auth()->user()->billing_auto_renew)>
+                                Auto-renew this plan after successful checkout
+                            </label>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <button
+                                type="button"
+                                data-billing-checkout
+                                data-tier="{{ auth()->user()->tier === 'starter' ? 'starter' : 'pro' }}"
+                                data-plan="{{ auth()->user()->billing_plan ?: 'monthly' }}"
+                                class="bg-slate-900 text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-slate-800 transition"
+                            >Update billing card</button>
+                            <a href="#pricing" class="bg-indigo-50 text-indigo-700 px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-indigo-100 transition text-center">Change plan</a>
+                        </div>
+                    </div>
+                    @if ($recentPayments->isNotEmpty())
+                        <div class="mt-5 border-t border-slate-200 pt-4">
+                            <p class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Recent payments</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                @foreach ($recentPayments as $payment)
+                                    <div class="rounded-lg border border-slate-200 px-3 py-2 text-sm flex justify-between gap-3">
+                                        <span class="text-slate-600">{{ $payment->paid_at?->format('M j, Y') }} · {{ ucfirst($payment->tier) }}</span>
+                                        <span class="font-bold text-slate-950">{{ $payment->currency }} {{ number_format((float) $payment->amount, 2) }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                </div>
             </section>
         @endauth
 
@@ -590,7 +640,6 @@
         </section>
         @endguest
 
-        @guest
         <section id="pricing" class="mb-12 fade-in scroll-mt-24">
             <div class="text-center mb-10">
                 <h2 class="text-3xl sm:text-4xl font-bold logo-text mb-3 text-slate-950">Simple, usage-aligned pricing</h2>
@@ -629,8 +678,8 @@
                         <li class="flex items-start gap-2">{!! $icon('check',14,'text-green-500 mt-0.5') !!}<span>Streaks & achievements</span></li>
                         <li class="flex items-start gap-2">{!! $icon('lock',14,'text-gray-300 mt-0.5') !!}<span class="text-gray-400">Direct Publish - Pro only</span></li>
                     </ul>
-                    <button type="button" onclick="payPro('starter','monthly')" class="block w-full text-center bg-indigo-600 text-white font-semibold py-2.5 rounded-lg hover:bg-indigo-700 transition">Start for ${{ number_format(config('postsmith.tiers.starter.checkout_monthly_price'), 2) }}</button>
-                    <button type="button" onclick="payPro('starter','annual')" class="block w-full text-center mt-2 bg-indigo-50 text-indigo-700 font-semibold py-2.5 rounded-lg hover:bg-indigo-100 transition">Annual first year - ${{ config('postsmith.tiers.starter.checkout_annual_price') }}</button>
+                    <button type="button" data-billing-checkout data-tier="starter" data-plan="monthly" class="block w-full text-center bg-indigo-600 text-white font-semibold py-2.5 rounded-lg hover:bg-indigo-700 transition">Start for ${{ number_format(config('postsmith.tiers.starter.checkout_monthly_price'), 2) }}</button>
+                    <button type="button" data-billing-checkout data-tier="starter" data-plan="annual" class="block w-full text-center mt-2 bg-indigo-50 text-indigo-700 font-semibold py-2.5 rounded-lg hover:bg-indigo-100 transition">Annual first year - ${{ config('postsmith.tiers.starter.checkout_annual_price') }}</button>
                 </div>
 
                 <div class="pricing-card bg-white rounded-2xl border border-gray-200 p-6 sm:p-8">
@@ -650,13 +699,12 @@
                         <li class="flex items-start gap-2">{!! $icon('check',14,'text-green-500 mt-0.5') !!}<span>Direct Publish to X, LinkedIn, etc.</span></li>
                         <li class="flex items-start gap-2">{!! $icon('check',14,'text-green-500 mt-0.5') !!}<span>Schedule posts (coming soon)</span></li>
                     </ul>
-                    <button type="button" onclick="payPro('pro','monthly')" class="block w-full text-center bg-purple-600 text-white font-semibold py-2.5 rounded-lg hover:bg-purple-700 transition">Start for ${{ number_format(config('postsmith.tiers.pro.checkout_monthly_price'), 2) }}</button>
-                    <button type="button" onclick="payPro('pro','annual')" class="block w-full text-center mt-2 bg-purple-50 text-purple-700 font-semibold py-2.5 rounded-lg hover:bg-purple-100 transition">Annual first year - ${{ config('postsmith.tiers.pro.checkout_annual_price') }}</button>
+                    <button type="button" data-billing-checkout data-tier="pro" data-plan="monthly" class="block w-full text-center bg-purple-600 text-white font-semibold py-2.5 rounded-lg hover:bg-purple-700 transition">Start for ${{ number_format(config('postsmith.tiers.pro.checkout_monthly_price'), 2) }}</button>
+                    <button type="button" data-billing-checkout data-tier="pro" data-plan="annual" class="block w-full text-center mt-2 bg-purple-50 text-purple-700 font-semibold py-2.5 rounded-lg hover:bg-purple-100 transition">Annual first year - ${{ config('postsmith.tiers.pro.checkout_annual_price') }}</button>
                 </div>
             </div>
             <p class="text-center text-xs text-gray-400 mt-6">Annual plans are 20% off for the first year. Secured by Flutterwave.</p>
         </section>
-        @endguest
 
         @guest
         <section class="mb-8">
@@ -856,6 +904,7 @@
         class="hidden"
         data-flw-public-key="{{ config('postsmith.payments.flutterwave_public_key') }}"
         data-flw-currency="{{ config('postsmith.payments.currency') }}"
+        data-billing-intent-url="{{ auth()->check() ? route('billing.flutterwave.intent') : '' }}"
         data-billing-verify-url="{{ route('billing.flutterwave.verify') }}"
         data-auth-redirect-url="{{ route('auth.google.redirect') }}"
         data-auth-user='@json(auth()->check() ? ['id' => auth()->id(), 'email' => auth()->user()->email, 'name' => auth()->user()->name ?: auth()->user()->email] : null, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)'
@@ -870,6 +919,7 @@
         var POSTSMITH_CONFIG = document.getElementById('postsmith-config').dataset;
         var FLW_PUBLIC_KEY = POSTSMITH_CONFIG.flwPublicKey;
         var FLW_CURRENCY = POSTSMITH_CONFIG.flwCurrency;
+        var BILLING_INTENT_URL = POSTSMITH_CONFIG.billingIntentUrl;
         var BILLING_VERIFY_URL = POSTSMITH_CONFIG.billingVerifyUrl;
         var AUTH_REDIRECT_URL = POSTSMITH_CONFIG.authRedirectUrl;
         var AUTH_USER = JSON.parse(POSTSMITH_CONFIG.authUser);
@@ -911,22 +961,44 @@
                 return;
             }
 
-            var amount = PLAN_AMOUNTS[tier] && PLAN_AMOUNTS[tier][plan] ? PLAN_AMOUNTS[tier][plan] : PLAN_AMOUNTS.pro.monthly;
-            var txRef = 'POSTSMITH_' + AUTH_USER.id + '_' + tier + '_' + plan + '_' + Date.now();
+            var autoRenewInput = document.getElementById('billing-auto-renew');
+            var autoRenew = autoRenewInput ? autoRenewInput.checked : false;
+            var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+            fetch(BILLING_INTENT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrf
+                },
+                body: JSON.stringify({ tier: tier, plan: plan, auto_renew: autoRenew })
+            })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('Could not start checkout.');
+                    return response.json();
+                })
+                .then(function(intent) {
+                    openFlutterwaveCheckout(tier, plan, intent, autoRenew);
+                })
+                .catch(function(error) {
+                    alert(error.message || 'Could not start checkout.');
+                });
+        }
+
+        function openFlutterwaveCheckout(tier, plan, intent, autoRenew) {
             FlutterwaveCheckout({
-                public_key: FLW_PUBLIC_KEY,
-                tx_ref: txRef,
-                amount: amount,
-                currency: FLW_CURRENCY,
+                public_key: intent.public_key || FLW_PUBLIC_KEY,
+                tx_ref: intent.tx_ref,
+                amount: intent.amount,
+                currency: intent.currency || FLW_CURRENCY,
+                payment_plan: intent.payment_plan || undefined,
                 payment_options: 'card,banktransfer,ussd',
                 customer: { email: AUTH_USER.email, name: AUTH_USER.name },
                 callback: function(data) {
                     var params = new URLSearchParams({
                         tx_ref: data.tx_ref,
-                        transaction_id: data.transaction_id,
-                        plan: plan,
-                        tier: tier
+                        transaction_id: data.transaction_id
                     });
                     window.location.href = BILLING_VERIFY_URL + '?' + params.toString();
                 },
@@ -938,6 +1010,12 @@
                 }
             });
         }
+
+        document.addEventListener('click', function(event) {
+            var button = event.target.closest('[data-billing-checkout]');
+            if (!button) return;
+            payPro(button.dataset.tier, button.dataset.plan);
+        });
 
         function updateForgeSelection(containerId, countId) {
             var container = document.getElementById(containerId);

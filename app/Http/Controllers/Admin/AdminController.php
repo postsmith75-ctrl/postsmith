@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\DiscoveredDriver;
 use App\Models\GenerationHistory;
+use App\Models\Payment;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\ViralLabSubmission;
@@ -54,6 +55,10 @@ class AdminController extends Controller
             ->count();
         $mrr = ($starterUsers * 9) + ($proUsers * 15);
         $arr = $mrr * 12;
+        $totalRevenue = (float) Payment::where('status', 'paid')->sum('amount');
+        $rangeRevenue = (float) Payment::where('status', 'paid')->whereBetween('paid_at', [$startDate, $endDate])->sum('amount');
+        $todayRevenue = (float) Payment::where('status', 'paid')->whereBetween('paid_at', [now()->startOfDay(), now()->endOfDay()])->sum('amount');
+        $paidTransactions = Payment::where('status', 'paid')->whereBetween('paid_at', [$startDate, $endDate])->count();
         $churned = User::where('tier', 'free')->whereBetween('downgraded_at', [$startDate, $endDate])->count();
         $churnRate = ($payingUsers + $churned) > 0 ? round(($churned / ($payingUsers + $churned)) * 100, 2) : 0;
 
@@ -80,15 +85,24 @@ class AdminController extends Controller
             ->groupBy('day')
             ->orderBy('day')
             ->pluck('cnt', 'day');
+        $revenueSeries = Payment::query()
+            ->selectRaw('DATE(paid_at) as day, sum(amount) as total')
+            ->where('status', 'paid')
+            ->whereBetween('paid_at', [$startDate, $endDate])
+            ->groupBy('day')
+            ->orderBy('day')
+            ->pluck('total', 'day');
 
         $chartLabels = [];
         $chartSignups = [];
         $chartGens = [];
+        $chartRevenue = [];
         foreach (CarbonPeriod::create($startDate->copy()->startOfDay(), '1 day', $endDate->copy()->startOfDay()) as $date) {
             $day = $date->format('Y-m-d');
             $chartLabels[] = $date->format('M j');
             $chartSignups[] = (int) ($signupSeries[$day] ?? 0);
             $chartGens[] = (int) ($genSeries[$day] ?? 0);
+            $chartRevenue[] = round((float) ($revenueSeries[$day] ?? 0), 2);
         }
 
         $tierDist = User::query()
@@ -141,6 +155,20 @@ class AdminController extends Controller
             ->orderByDesc('r.created_at')
             ->limit(10)
             ->get();
+        $recentPayments = Payment::query()
+            ->with('user')
+            ->where('status', 'paid')
+            ->latest('paid_at')
+            ->limit(12)
+            ->get();
+        $dailyRevenue = Payment::query()
+            ->selectRaw('DATE(paid_at) as day, count(*) as payments_count, sum(amount) as total')
+            ->where('status', 'paid')
+            ->whereBetween('paid_at', [$startDate, $endDate])
+            ->groupBy('day')
+            ->orderByDesc('day')
+            ->limit(14)
+            ->get();
 
         return view('admin.dashboard', [
             'range' => $range,
@@ -174,6 +202,10 @@ class AdminController extends Controller
             'zernioUsers' => $zernioUsers,
             'mrr' => $mrr,
             'arr' => $arr,
+            'totalRevenue' => $totalRevenue,
+            'rangeRevenue' => $rangeRevenue,
+            'todayRevenue' => $todayRevenue,
+            'paidTransactions' => $paidTransactions,
             'churned' => $churned,
             'churnRate' => $churnRate,
             'wowGrowth' => $wowGrowth,
@@ -181,6 +213,7 @@ class AdminController extends Controller
             'chartLabels' => $chartLabels,
             'chartSignups' => $chartSignups,
             'chartGens' => $chartGens,
+            'chartRevenue' => $chartRevenue,
             'tierLabels' => $tierDist->map(fn ($tier) => ucfirst((string) $tier->tier))->all(),
             'tierValues' => $tierDist->pluck('cnt')->map(fn ($count) => (int) $count)->all(),
             'platLabels' => $platformDist->pluck('platform')->all(),
@@ -195,6 +228,8 @@ class AdminController extends Controller
             'recentActivity' => $recentActivity,
             'topUsers' => $topUsers,
             'recentRatings' => $recentRatings,
+            'recentPayments' => $recentPayments,
+            'dailyRevenue' => $dailyRevenue,
         ]);
     }
 

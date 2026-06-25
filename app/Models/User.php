@@ -28,6 +28,13 @@ class User extends Authenticatable
         'generations_used',
         'generations_reset_at',
         'pro_expires_at',
+        'billing_auto_renew',
+        'billing_plan',
+        'payment_provider_customer_id',
+        'billing_card_brand',
+        'billing_card_last_four',
+        'billing_card_expires',
+        'billing_card_updated_at',
         'viral_reset_at',
         'zernio_api_key',
     ];
@@ -40,6 +47,11 @@ class User extends Authenticatable
     public function generationHistory(): HasMany
     {
         return $this->hasMany(GenerationHistory::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public function isPro(): bool
@@ -81,8 +93,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'email_verified' => 'boolean',
+            'verification_sent_at' => 'datetime',
+            'reset_expires_at' => 'datetime',
             'generations_reset_at' => 'datetime',
             'pro_expires_at' => 'datetime',
+            'billing_auto_renew' => 'boolean',
+            'billing_card_updated_at' => 'datetime',
             'viral_reset_at' => 'datetime',
             'username_changed_at' => 'datetime',
             'last_generation_at' => 'datetime',

@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
+        $middleware->validateCsrfTokens(except: [
+            'billing/flutterwave/webhook',
+        ]);
 
         $middleware->alias([
             'postsmith.admin' => \App\Http\Middleware\EnsurePostsmithAdmin::class,

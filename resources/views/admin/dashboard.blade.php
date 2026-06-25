@@ -86,11 +86,88 @@
             <div class="text-xs mt-1 neutral">${{ number_format($arr) }} ARR</div>
         </div>
         <div class="kpi-card rounded-xl p-5">
+            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Revenue Today</p>
+            <div class="text-2xl font-bold text-emerald-600">${{ number_format($todayRevenue, 2) }}</div>
+            <div class="text-xs mt-1 neutral">Actual paid receipts</div>
+        </div>
+        <div class="kpi-card rounded-xl p-5">
+            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Revenue Range</p>
+            <div class="text-2xl font-bold text-emerald-600">${{ number_format($rangeRevenue, 2) }}</div>
+            <div class="text-xs mt-1 neutral">{{ number_format($paidTransactions) }} paid {{ Str::plural('payment', $paidTransactions) }}</div>
+        </div>
+        <div class="kpi-card rounded-xl p-5">
+            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Platform Total</p>
+            <div class="text-2xl font-bold text-emerald-600">${{ number_format($totalRevenue, 2) }}</div>
+            <div class="text-xs mt-1 neutral">All-time collected</div>
+        </div>
+        <div class="kpi-card rounded-xl p-5">
             <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Avg Rating</p>
             <div class="text-2xl font-bold star-gold">
                 {!! $avgRating > 0 ? $avgRating.' <span class="text-lg">&#9733;</span>' : '&mdash;' !!}
             </div>
             <div class="text-xs mt-1 neutral">{{ $totalRatings }} {{ Str::plural('rating', $totalRatings) }}</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="kpi-card rounded-xl p-5">
+            <h3 class="text-sm font-semibold text-gray-900 mb-4">Recent Payments</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200 text-left text-gray-500 text-xs uppercase">
+                            <th class="pb-3 pr-4">User</th>
+                            <th class="pb-3 pr-4">Plan</th>
+                            <th class="pb-3 pr-4 text-right">Amount</th>
+                            <th class="pb-3 text-right">Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse ($recentPayments as $payment)
+                            <tr class="table-row">
+                                <td class="py-3 pr-4">
+                                    <div class="text-gray-800 font-medium">{{ $payment->user?->name ?: Str::before((string) $payment->user?->email, '@') ?: 'Unknown user' }}</div>
+                                    <div class="text-xs text-gray-500">{{ $payment->user?->email }}</div>
+                                </td>
+                                <td class="py-3 pr-4">
+                                    <span class="inline-block px-2 py-0.5 rounded text-xs font-bold {{ $tierClass($payment->tier) }}">{{ ucfirst($payment->tier) }}</span>
+                                    <div class="text-xs text-gray-500 mt-1">{{ ucfirst($payment->plan) }} · {{ $payment->auto_renew_requested ? 'Auto-renew' : 'Manual' }}</div>
+                                </td>
+                                <td class="py-3 pr-4 text-right text-emerald-600 font-bold">{{ $payment->currency }} {{ number_format((float) $payment->amount, 2) }}</td>
+                                <td class="py-3 text-right text-gray-400 text-xs">{{ $payment->paid_at?->format('M j, g:i A') }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="4" class="py-6 text-center text-gray-400 text-sm">No paid transactions yet.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="kpi-card rounded-xl p-5">
+            <h3 class="text-sm font-semibold text-gray-900 mb-4">Daily Revenue</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200 text-left text-gray-500 text-xs uppercase">
+                            <th class="pb-3 pr-4">Day</th>
+                            <th class="pb-3 pr-4 text-center">Payments</th>
+                            <th class="pb-3 text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse ($dailyRevenue as $day)
+                            <tr class="table-row">
+                                <td class="py-3 pr-4 text-gray-800 font-medium">{{ \Carbon\Carbon::parse($day->day)->format('M j, Y') }}</td>
+                                <td class="py-3 pr-4 text-center text-gray-600">{{ number_format($day->payments_count) }}</td>
+                                <td class="py-3 text-right text-emerald-600 font-bold">${{ number_format((float) $day->total, 2) }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="3" class="py-6 text-center text-gray-400 text-sm">No revenue in this range.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

@@ -50,7 +50,18 @@ return [
     'payments' => [
         'flutterwave_public_key' => env('FLW_PUBLIC_KEY', ''),
         'flutterwave_secret_key' => env('FLW_SECRET_KEY', ''),
+        'flutterwave_webhook_secret_hash' => env('FLW_SECRET_HASH', ''),
         'currency' => env('FLW_CURRENCY', 'USD'),
+        'flutterwave_payment_plans' => [
+            'starter' => [
+                'monthly' => env('FLW_STARTER_MONTHLY_PLAN_ID', ''),
+                'annual' => env('FLW_STARTER_ANNUAL_PLAN_ID', ''),
+            ],
+            'pro' => [
+                'monthly' => env('FLW_PRO_MONTHLY_PLAN_ID', ''),
+                'annual' => env('FLW_PRO_ANNUAL_PLAN_ID', ''),
+            ],
+        ],
     ],
 
     'admin_email' => env('ADMIN_EMAIL', ''),

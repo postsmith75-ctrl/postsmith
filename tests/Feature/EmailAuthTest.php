@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class EmailAuthTest extends TestCase
@@ -13,18 +14,22 @@ class EmailAuthTest extends TestCase
 
     public function test_guest_can_register_with_name_email_and_password(): void
     {
+        Mail::fake();
+
         $this->post(route('register.store'), [
             'name' => 'Ada Creator',
             'email' => 'Ada@Example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ])
-            ->assertRedirect(route('dashboard'));
+            ->assertRedirect(route('verification.notice'));
 
         $user = User::where('email', 'ada@example.com')->firstOrFail();
 
         $this->assertAuthenticatedAs($user);
         $this->assertSame('Ada Creator', $user->name);
+        $this->assertFalse($user->email_verified);
+        $this->assertNotNull($user->verification_code);
         $this->assertTrue(Hash::check('password123', $user->password));
     }
 

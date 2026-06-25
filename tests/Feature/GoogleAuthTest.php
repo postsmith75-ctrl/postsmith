@@ -9,9 +9,18 @@ class GoogleAuthTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_google_login_button_points_to_auth_route(): void
+    public function test_public_dashboard_links_to_auth_pages_without_google_cta(): void
     {
         $this->get('/')
+            ->assertOk()
+            ->assertSee(route('login'))
+            ->assertSee(route('register'))
+            ->assertDontSee(route('auth.google.redirect'));
+    }
+
+    public function test_login_page_keeps_google_option(): void
+    {
+        $this->get(route('login'))
             ->assertOk()
             ->assertSee(route('auth.google.redirect'));
     }

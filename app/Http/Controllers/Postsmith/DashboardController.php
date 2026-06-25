@@ -8,18 +8,34 @@ use App\Models\Post;
 use App\Services\Postsmith\UsageManager;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
     public function __invoke(Request $request, UsageManager $usageManager): View
     {
         $user = $request->user();
-        $posts = $user
-            ? $user->posts()->latest()->limit(10)->get()
-            : collect();
-        $allPosts = $user
-            ? $user->posts()->get()
-            : collect();
+        $historyDays = $usageManager->historyDays($user);
+        $postsQuery = $user ? $user->posts()->latest() : null;
+
+        if ($postsQuery && $historyDays > 0) {
+            $postsQuery->where('created_at', '>=', now()->subDays($historyDays));
+        }
+
+        if ($user && $usageManager->canUseRss($user) && ! $user->z_rss_token) {
+            $user->forceFill(['z_rss_token' => Str::random(48)])->save();
+        }
+
+        $posts = $postsQuery ? (clone $postsQuery)->limit(10)->get() : collect();
+        $allPosts = $postsQuery ? (clone $postsQuery)->get() : collect();
+        $drivers = collect(config('postsmith.drivers'));
+
+        if ($user && ($user->isPro() || $user->isAdmin())) {
+            $drivers = $drivers
+                ->merge(DiscoveredDriver::query()->where('status', 'active')->orderBy('driver_name')->pluck('driver_name'))
+                ->unique()
+                ->values();
+        }
 
         $stats = [
             'posts' => $allPosts->count(),
@@ -48,7 +64,7 @@ class DashboardController extends Controller
 
         return view('postsmith.dashboard', [
             'brand' => config('postsmith.brand'),
-            'drivers' => config('postsmith.drivers'),
+            'drivers' => $drivers->all(),
             'driverLibrary' => DiscoveredDriver::query()->where('status', 'active')->orderBy('driver_name')->get(),
             'platforms' => ['Facebook Groups/Feed', 'LinkedIn', 'Twitter/X', 'Instagram', 'Threads', 'Reddit'],
             'lengths' => ['short' => 'Short', 'medium' => 'Medium', 'long' => 'Long'],
@@ -58,6 +74,11 @@ class DashboardController extends Controller
             'posts' => $posts,
             'stats' => $stats,
             'usage' => $usageManager->status($user),
+            'viralUsage' => $user ? $usageManager->viralLabStatus($user) : null,
+            'historyDays' => $historyDays,
+            'starLimit' => $user ? $usageManager->starLimit($user) : 5,
+            'canUseRss' => $user ? $usageManager->canUseRss($user) : false,
+            'canExportCsv' => $user ? $usageManager->canExportCsv($user) : false,
             'recentPayments' => $user ? $user->payments()->where('status', 'paid')->latest('paid_at')->limit(5)->get() : collect(),
         ]);
     }

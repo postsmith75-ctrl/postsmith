@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Postsmith;
 use App\Http\Controllers\Controller;
 use App\Models\ViralLabSubmission;
 use App\Services\Postsmith\ContentGenerator;
+use App\Services\Postsmith\UsageManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ViralLabController extends Controller
 {
-    public function store(Request $request, ContentGenerator $generator): RedirectResponse
+    public function store(Request $request, ContentGenerator $generator, UsageManager $usageManager): RedirectResponse
     {
         abort_unless($request->user(), 403);
+
+        if (! $usageManager->canUseViralLab($request->user())) {
+            return back()->withErrors(['post_text' => 'Viral Lab limit reached for this plan.'])->withInput()->with('active_tab', 'viral_lab');
+        }
 
         $data = $request->validate([
             'post_text' => ['required', 'string', 'min:80'],
@@ -33,7 +38,7 @@ class ViralLabController extends Controller
         ) {
             return back()->withErrors([
                 'post_text' => "Viral Lab minimums are {$rules['min_words']} words, {$rules['min_likes']} likes, {$rules['min_comments']} comments, and {$rules['min_shares']} shares.",
-            ])->withInput();
+            ])->withInput()->with('active_tab', 'viral_lab');
         }
 
         $result = $generator->analyzeViralPost($data['post_text'], $data['platform']);
@@ -52,6 +57,7 @@ class ViralLabController extends Controller
 
         return back()
             ->with('viral_analysis', $analysis)
+            ->with('active_tab', 'viral_lab')
             ->with('source', $result['source']);
     }
 }

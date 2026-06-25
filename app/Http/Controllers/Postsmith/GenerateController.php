@@ -42,6 +42,7 @@ class GenerateController extends Controller
         return redirect()
             ->route('dashboard')
             ->withInput($data)
+            ->with('active_tab', 'scratch')
             ->with('generated', $result['posts'])
             ->with('source', $result['source']);
     }

@@ -1,8 +1,28 @@
 @php
     $activeTab = session('active_tab', session('rewrites') ? 'rewrite' : 'scratch');
+    if ($errors->has('draft')) {
+        $activeTab = 'rewrite';
+    } elseif ($errors->has('post_text') || $errors->has('likes') || $errors->has('comments') || $errors->has('shares')) {
+        $activeTab = 'viral_lab';
+    }
     $items = $generated ?: $rewrites;
     $platform = old('platform', 'Facebook Groups/Feed');
     $length = old('length', 'medium');
+    $generationLimit = $usage['limit'] ?? 0;
+    $generationRemaining = $generationLimit < 0 ? -1 : max(0, (int) ($usage['remaining'] ?? 0));
+    $generationBlocked = (bool) ($usage['blocked'] ?? false);
+    $generationCountLabel = $generationLimit < 0
+        ? 'Unlimited generations remaining'
+        : number_format($generationRemaining).' of '.number_format($generationLimit).' generations left this month';
+    $afterGenerationLabel = $generationLimit < 0
+        ? 'Unlimited generations remaining after this request'
+        : number_format(max(0, $generationRemaining - 1)).' of '.number_format($generationLimit).' generations left after this request';
+    $viralLimit = $viralUsage['limit'] ?? 0;
+    $viralRemaining = $viralLimit < 0 ? -1 : max(0, (int) ($viralUsage['remaining'] ?? 0));
+    $viralBlocked = (bool) ($viralUsage['blocked'] ?? false);
+    $viralCountLabel = $viralLimit < 0
+        ? 'Unlimited Viral Lab analyses remaining'
+        : number_format($viralRemaining).' of '.number_format($viralLimit).' Viral Lab analyses left this month';
 
     $icon = function (string $name, int $size = 18, string $class = '') {
         $attrs = "width=\"{$size}\" height=\"{$size}\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"{$class}\"";
@@ -201,7 +221,8 @@
                     <img src="{{ asset('postsmith-logo-mark.png') }}" alt="PostSmith" class="w-32 h-32 object-contain">
                 </div>
                 <h3 class="text-xl font-bold logo-text text-gray-900 mb-2 mt-1">Forging your post...</h3>
-                <p class="text-sm text-gray-500 font-medium min-h-[24px]">Finding the hook, rhythm, and driver.</p>
+                <p class="text-sm text-gray-500 font-medium min-h-[24px]" id="loading-status">Finding the hook, rhythm, and driver.</p>
+                <p class="text-xs font-semibold text-indigo-700 mt-2" id="loading-countdown">{{ $afterGenerationLabel }}</p>
             </div>
         </div>
     </div>
@@ -227,10 +248,7 @@
                     </form>
                 @else
                     <a href="{{ route('register') }}" class="text-xs sm:text-sm bg-gray-900 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium hover:bg-gray-800 transition">Sign up</a>
-                    <a href="{{ route('auth.google.redirect') }}" class="text-xs sm:text-sm bg-white border border-gray-300 text-gray-700 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium hover:bg-gray-50 transition flex items-center gap-1.5 sm:gap-2">
-                        <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                        <span class="hidden sm:inline">Sign in with Google</span><span class="sm:hidden">Sign in</span>
-                    </a>
+                    <a href="{{ route('login') }}" class="text-xs sm:text-sm bg-white border border-gray-300 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium hover:bg-gray-50 transition">Log in</a>
                 @endauth
             </div>
         </div>
@@ -312,11 +330,14 @@
                             @endphp
                             <div class="usage-bar-fill bg-indigo-600 js-usage-bar" data-usage-percent="{{ $usagePercent }}"></div>
                         </div>
+                        <p class="text-xs text-slate-500 mt-2">{{ $generationCountLabel }}</p>
                     </div>
                     <div class="workspace-card">
                         <p class="text-sm font-bold text-slate-950 mb-2">Direct publish</p>
                         <p class="text-sm text-slate-500 leading-6">
-                            @if (auth()->user()->zernio_api_key)
+                            @if (! auth()->user()->isPro() && ! auth()->user()->isAdmin())
+                                Direct publish is available on Pro.
+                            @elseif (auth()->user()->zernio_api_key)
                                 Zernio is connected. Pro publishing can be routed from saved posts.
                             @else
                                 Zernio is not connected yet. We can add a settings page next so this feels native.
@@ -475,7 +496,15 @@
                         <p class="text-xs text-gray-400 mt-1" id="gen-count-scratch">{{ count($drivers) }} of 5 selected</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
-                        <button type="submit" id="gen-btn-scratch" class="w-full sm:w-auto justify-center bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">{!! $icon('rocket',16) !!} Forge My Post</button>
+                        <button type="submit" id="gen-btn-scratch" @disabled($generationBlocked) class="w-full sm:w-auto justify-center {{ $generationBlocked ? 'bg-slate-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700' }} text-white font-semibold px-8 py-3 rounded-lg transition flex items-center gap-2">{!! $icon('rocket',16) !!} Forge My Post</button>
+                        <div class="text-xs sm:text-sm">
+                            <p class="font-bold {{ $generationBlocked ? 'text-red-600' : 'text-indigo-700' }}">{{ $generationCountLabel }}</p>
+                            @if ($generationBlocked)
+                                <a href="#pricing" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade to keep generating.</a>
+                            @else
+                                <p class="text-slate-400">{{ $afterGenerationLabel }}</p>
+                            @endif
+                        </div>
                     </div>
                 </form>
             </div>
@@ -521,7 +550,15 @@
                         <p class="text-xs text-gray-400 mt-1" id="gen-count-rewrite">{{ count($drivers) }} of 5 selected</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
-                        <button type="submit" id="gen-btn-rewrite" class="w-full sm:w-auto justify-center bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">{!! $icon('search',16) !!} Fix My Post</button>
+                        <button type="submit" id="gen-btn-rewrite" @disabled($generationBlocked) class="w-full sm:w-auto justify-center {{ $generationBlocked ? 'bg-slate-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700' }} text-white font-semibold px-8 py-3 rounded-lg transition flex items-center gap-2">{!! $icon('search',16) !!} Fix My Post</button>
+                        <div class="text-xs sm:text-sm">
+                            <p class="font-bold {{ $generationBlocked ? 'text-red-600' : 'text-indigo-700' }}">{{ $generationCountLabel }}</p>
+                            @if ($generationBlocked)
+                                <a href="#pricing" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade to keep rewriting.</a>
+                            @else
+                                <p class="text-slate-400">{{ $afterGenerationLabel }}</p>
+                            @endif
+                        </div>
                     </div>
                 </form>
             </div>
@@ -539,14 +576,22 @@
                         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
                             <select name="platform" class="sm:col-span-1 px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
                                 @foreach ($platforms as $p)
-                                    <option value="{{ $p }}">{{ $p }}</option>
+                                    <option value="{{ $p }}" @selected(old('platform') === $p)>{{ $p }}</option>
                                 @endforeach
                             </select>
-                            <input type="number" name="likes" min="0" placeholder="Likes" class="px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" required>
-                            <input type="number" name="comments" min="0" placeholder="Comments" class="px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" required>
-                            <input type="number" name="shares" min="0" placeholder="Shares" class="px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" required>
+                            <input type="number" name="likes" min="0" value="{{ old('likes') }}" placeholder="Likes" class="px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" required>
+                            <input type="number" name="comments" min="0" value="{{ old('comments') }}" placeholder="Comments" class="px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" required>
+                            <input type="number" name="shares" min="0" value="{{ old('shares') }}" placeholder="Shares" class="px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" required>
                         </div>
-                        <button type="submit" class="w-full sm:w-auto justify-center bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">{!! $icon('flask',16) !!} Analyze Post</button>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button type="submit" @disabled($viralBlocked) class="w-full sm:w-auto justify-center {{ $viralBlocked ? 'bg-slate-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700' }} text-white font-semibold px-8 py-3 rounded-lg transition flex items-center gap-2">{!! $icon('flask',16) !!} Analyze Post</button>
+                            <div class="text-xs sm:text-sm">
+                                <p class="font-bold {{ $viralBlocked ? 'text-red-600' : 'text-indigo-700' }}">{{ $viralCountLabel }}</p>
+                                @if ($viralBlocked)
+                                    <a href="#pricing" class="text-slate-500 hover:text-indigo-700 font-semibold">Upgrade for more analyses.</a>
+                                @endif
+                            </div>
+                        </div>
                         <p class="text-xs text-gray-400">Minimums: {{ config('postsmith.viral_lab.min_words') }} words, {{ config('postsmith.viral_lab.min_likes') }} likes, {{ config('postsmith.viral_lab.min_comments') }} comments, {{ config('postsmith.viral_lab.min_shares') }} shares.</p>
                     </form>
                 @else
@@ -820,7 +865,7 @@
                                         <button type="submit" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-medium text-sm hover:bg-indigo-700 transition flex items-center justify-center gap-1.5">{!! $icon('save',14) !!} Save & Track</button>
                                     </form>
                                 @else
-                                    <a href="{{ route('auth.google.redirect') }}" class="flex-1 bg-gray-100 text-gray-500 py-2.5 rounded-lg font-medium text-sm hover:bg-gray-200 transition flex items-center justify-center gap-1.5">{!! $icon('lock',14) !!} Save & Track</a>
+                                    <a href="{{ route('login') }}" class="flex-1 bg-gray-100 text-gray-500 py-2.5 rounded-lg font-medium text-sm hover:bg-gray-200 transition flex items-center justify-center gap-1.5">{!! $icon('lock',14) !!} Save & Track</a>
                                 @endauth
                             </div>
                         </div>
@@ -832,11 +877,33 @@
         <div id="tracker" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 mt-8">
             <div class="flex items-center justify-between mb-2 flex-wrap gap-4">
                 <div><h3 class="text-xl font-bold logo-text flex items-center gap-2">{!! $icon('chart',18) !!} Your Performance</h3></div>
-                @if ($stats['best_driver'])
-                    <div class="bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-lg"><span class="text-sm font-semibold text-indigo-800 flex items-center gap-1">{!! $icon('star',14) !!} Your best format: {{ $stats['best_driver'] }}</span></div>
-                @endif
+                <div class="flex flex-wrap items-center gap-2">
+                    @if ($stats['best_driver'])
+                        <div class="bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-lg"><span class="text-sm font-semibold text-indigo-800 flex items-center gap-1">{!! $icon('star',14) !!} Your best format: {{ $stats['best_driver'] }}</span></div>
+                    @endif
+                    @auth
+                        @if ($canExportCsv)
+                            <a href="{{ route('posts.export') }}" class="inline-flex items-center gap-1.5 bg-slate-900 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate-800 transition">{!! $icon('file',14) !!} Export CSV</a>
+                        @else
+                            <a href="#pricing" class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-500 px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition">{!! $icon('lock',14) !!} CSV on Pro</a>
+                        @endif
+                        @if ($canUseRss && auth()->user()->z_rss_token)
+                            <a href="{{ route('posts.rss', auth()->user()->z_rss_token) }}" class="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">{!! $icon('file',14) !!} RSS Feed</a>
+                        @else
+                            <a href="#pricing" class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-500 px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition">{!! $icon('lock',14) !!} RSS on Starter</a>
+                        @endif
+                    @endauth
+                </div>
             </div>
-            <p class="text-sm text-gray-500 mb-6 max-w-2xl">Log your results after posting. We analyze what works across the community to keep improving PostSmith's engine.</p>
+            <p class="text-sm text-gray-500 mb-2 max-w-2xl">Log your results after posting. We analyze what works across the community to keep improving PostSmith's engine.</p>
+            @auth
+                <p class="text-xs text-slate-400 mb-6">
+                    {{ $historyDays < 0 ? 'Forever history' : number_format($historyDays).'-day history' }} ·
+                    {{ $starLimit < 0 ? 'Unlimited starred posts' : 'Star up to '.number_format($starLimit).' posts' }}
+                </p>
+            @else
+                <div class="mb-6"></div>
+            @endauth
 
             @auth
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -848,7 +915,16 @@
 
                 @forelse ($posts as $post)
                     <div class="bg-white rounded-xl border border-gray-200 p-4 mb-3">
-                        <div class="flex items-center gap-3 mb-2"><span class="inline-block px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-700">{{ $post->driver }}</span><span class="text-sm text-gray-500">{{ $post->platform }}</span></div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="inline-block px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-700">{{ $post->driver }}</span>
+                            <span class="text-sm text-gray-500">{{ $post->platform }}</span>
+                            <form method="POST" action="{{ route('posts.star', $post) }}" class="ml-auto">
+                                @csrf
+                                <button type="submit" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold border {{ $post->is_starred ? 'bg-amber-50 border-amber-200 text-amber-700' : 'bg-white border-slate-200 text-slate-500 hover:border-amber-200 hover:text-amber-700' }} transition">
+                                    {!! $icon('star', 13) !!} {{ $post->is_starred ? 'Starred' : 'Star' }}
+                                </button>
+                            </form>
+                        </div>
                         <p class="post-text text-gray-700">{{ $post->post_text }}</p>
                     </div>
                 @empty
@@ -858,8 +934,8 @@
                 <div class="text-center py-12 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
                     <div class="flex justify-center mb-3">{!! $icon('lock',40,'text-gray-300') !!}</div>
                     <p class="mb-2 font-medium text-gray-600">Track which posts actually perform.</p>
-                    <p class="text-sm mb-4">Sign in with Google to save posts, log likes & comments, and see which formats work.</p>
-                    <a href="{{ route('auth.google.redirect') }}" class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition inline-block">Sign in with Google</a>
+                    <p class="text-sm mb-4">Log in to save posts, log likes & comments, and see which formats work.</p>
+                    <a href="{{ route('login') }}" class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition inline-block">Log in</a>
                 </div>
             @endauth
         </div>
@@ -906,12 +982,13 @@
         data-flw-currency="{{ config('postsmith.payments.currency') }}"
         data-billing-intent-url="{{ auth()->check() ? route('billing.flutterwave.intent') : '' }}"
         data-billing-verify-url="{{ route('billing.flutterwave.verify') }}"
-        data-auth-redirect-url="{{ route('auth.google.redirect') }}"
+        data-auth-redirect-url="{{ route('login') }}"
         data-auth-user='@json(auth()->check() ? ['id' => auth()->id(), 'email' => auth()->user()->email, 'name' => auth()->user()->name ?: auth()->user()->email] : null, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)'
         data-starter-monthly="{{ (float) config('postsmith.tiers.starter.checkout_monthly_price') }}"
         data-starter-annual="{{ (float) config('postsmith.tiers.starter.checkout_annual_price') }}"
         data-pro-monthly="{{ (float) config('postsmith.tiers.pro.checkout_monthly_price') }}"
         data-pro-annual="{{ (float) config('postsmith.tiers.pro.checkout_annual_price') }}"
+        data-after-generation-label="{{ $afterGenerationLabel }}"
     ></div>
     <template id="icon-check-template">{!! $icon('check', 14) !!}</template>
 
@@ -1061,6 +1138,10 @@
         document.querySelectorAll('#form-generate, #form-rewrite').forEach(function(form) {
             form.addEventListener('submit', function() {
                 var overlay = document.getElementById('loading-overlay');
+                var status = document.getElementById('loading-status');
+                var countdown = document.getElementById('loading-countdown');
+                if (status) status.textContent = form.id === 'form-rewrite' ? 'Fixing the hook, rhythm, and structure.' : 'Finding the hook, rhythm, and driver.';
+                if (countdown) countdown.textContent = POSTSMITH_CONFIG.afterGenerationLabel;
                 if (overlay) overlay.classList.add('active');
             });
         });

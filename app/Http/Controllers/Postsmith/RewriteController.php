@@ -42,6 +42,7 @@ class RewriteController extends Controller
         return redirect()
             ->route('dashboard')
             ->withInput($data)
+            ->with('active_tab', 'rewrite')
             ->with('rewrites', $result['rewrites'])
             ->with('source', $result['source']);
     }

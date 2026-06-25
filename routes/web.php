@@ -24,6 +24,7 @@ Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('aut
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 Route::post('/logout', [GoogleAuthController::class, 'logout'])->name('logout');
 Route::post('/billing/flutterwave/webhook', [BillingController::class, 'flutterwaveWebhook'])->name('billing.flutterwave.webhook');
+Route::get('/rss/{token}', [PostController::class, 'rss'])->name('posts.rss');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [EmailAuthController::class, 'showLogin'])->name('login');
@@ -71,6 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/billing/flutterwave/intent', [BillingController::class, 'createFlutterwaveIntent'])->name('billing.flutterwave.intent');
     Route::get('/billing/flutterwave/verify', [BillingController::class, 'verifyFlutterwave'])->name('billing.flutterwave.verify');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/export', [PostController::class, 'export'])->name('posts.export');
     Route::patch('/posts/{post}/metrics', [PostController::class, 'updateMetrics'])->name('posts.metrics');
     Route::post('/posts/{post}/star', [PostController::class, 'toggleStar'])->name('posts.star');
 });

@@ -39,11 +39,7 @@
     <style>
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background:
-                radial-gradient(circle at 18% 8%, rgba(79,70,229,.12), transparent 28%),
-                radial-gradient(circle at 82% 18%, rgba(16,185,129,.10), transparent 24%),
-                linear-gradient(180deg, #f8fafc 0%, #eef2ff 34%, #f8fafc 70%),
-                #f8fafc;
+            background: #ffffff;
         }
         .logo-text { font-weight: 700; letter-spacing: -0.03em; }
         .card-hover { transition: all 0.3s ease; }
@@ -203,26 +199,8 @@
             .comment-track { animation: none; }
         }
     </style>
-    <style>
-        /* Dark theme overrides */
-        body { background: linear-gradient(180deg,#071126 0%,#041022 100%) !important; color: #e6eef8 !important; }
-        .glass-nav { background: rgba(6,10,18,0.6) !important; backdrop-filter: blur(10px) !important; box-shadow: 0 1px 0 rgba(255,255,255,0.02) !important; }
-        .hero-shell { border: 1px solid rgba(255,255,255,0.03) !important; background: linear-gradient(135deg, rgba(10,18,30,0.6), rgba(6,10,18,0.6)) !important; box-shadow: 0 28px 80px -40px rgba(2,6,23,.7) !important; }
-        .premium-panel, .proof-card, .comment-rail, .workspace-card, .before-after, .signal-card { border:1px solid rgba(255,255,255,0.03) !important; background: rgba(255,255,255,0.02) !important; color: #e6eef8 !important; }
-        .comment-card { background: linear-gradient(180deg, rgba(6,10,18,0.6), rgba(5,8,16,0.6)) !important; color: #e6eef8 !important; box-shadow: 0 12px 26px -22px rgba(0,0,0,.6) !important; }
-        .tool-header { background: linear-gradient(135deg, rgba(17,24,39,0.9), rgba(49,46,81,0.85)) !important; color: #e6eef8 !important; }
-        .tab-bar { background: rgba(255,255,255,0.02) !important; }
-        .tab-btn { color: #9aa6b2 !important; }
-        .tab-btn.active { background: rgba(255,255,255,0.04) !important; color: #e6eef8 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
-        textarea, select, input { background: rgba(255,255,255,0.02) !important; color: #e6eef8 !important; box-shadow: 0 1px 2px rgba(0,0,0,.6) !important; border-color: rgba(255,255,255,0.04) !important; }
-        .toast { background: rgba(255,255,255,0.06) !important; color:#e6eef8 !important; }
-        .eyebrow { background: rgba(255,255,255,0.02) !important; color: #e6eef8 !important; border-color: rgba(255,255,255,0.04) !important; }
-        .avatar-dot { background: linear-gradient(135deg,#5b21b6,#7c3aed) !important; }
-        .usage-bar-bg { background: rgba(255,255,255,0.04) !important; }
-        .usage-bar-fill { background: linear-gradient(90deg,#6366f1,#7c3aed) !important; }
-    </style>
 </head>
-<body class="text-slate-100">
+<body class="text-slate-900">
     <div id="loading-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[100] opacity-0 pointer-events-none transition-opacity duration-300">
         <div class="flex flex-col items-center justify-center text-center w-full h-full">
             <div class="max-w-sm px-6">

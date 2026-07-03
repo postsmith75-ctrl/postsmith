@@ -400,7 +400,194 @@
                     @forelse ($recentSignups as $signup)
                         @php $isNew = $signup->created_at->gt(now()->subHour()); @endphp
                         <tr class="table-row {{ $isNew ? 'bg-emerald-50/50' : '' }}">
-                            <td class="py-3 pr-4">
+Great work. Before we finalize this feature, I want to improve the architecture so it can scale with future versions of Postsmith.
+
+IMPORTANT:
+Do NOT rewrite the implementation from scratch.
+Do NOT remove existing functionality.
+Refactor and improve the implementation while keeping it fully backwards compatible.
+
+==================================================
+1. Rename the AI Memory model
+==================================================
+
+Instead of using a generic name like UserMemory, rename it to something more descriptive such as:
+
+AiMemory
+
+or
+
+UserAiMemory
+
+The name should clearly communicate that this memory exists specifically to improve AI content generation.
+
+Update all relationships, services, migrations (if necessary), references and tests accordingly.
+
+==================================================
+2. Remove the "brand_profile" assumption
+==================================================
+
+The onboarding should NOT assume every user owns a business or brand.
+
+Users may use Postsmith for:
+
+- Personal use
+- School
+- Church
+- Business
+- Marketing
+- Content creation
+- Freelancing
+- Just exploring
+
+Instead of creating a memory type called:
+
+brand_profile
+
+Create a more generic memory type such as:
+
+profile
+
+or
+
+identity
+
+The stored content should represent who the user is and how they use Postsmith.
+
+Example:
+
+Use Case:
+Business
+
+About:
+"I own a fashion business selling affordable women's clothing."
+
+or
+
+Use Case:
+Personal
+
+About:
+"I enjoy writing about football and technology."
+
+This makes the memory system usable for every type of user.
+
+==================================================
+3. Improve the AI Memory architecture
+==================================================
+
+The current implementation retrieves user memory before generating prompts.
+
+Refactor this into a scalable architecture.
+
+Instead of simply loading every memory, create a retrieval layer inside the AiMemory service.
+
+Example architecture:
+
+AiMemory
+
+↓
+
+Retrieve Relevant Memories
+
+↓
+
+Build Prompt Context
+
+↓
+
+Return Context
+
+The retrieval layer should currently return all active memories because this is Version 2.
+
+However, the code should be designed so that future versions can easily rank memories by:
+
+- relevance
+- importance
+- recency
+- AI confidence
+- memory type
+
+without requiring major rewrites.
+
+Leave clear comments explaining this future architecture.
+
+==================================================
+4. Build Prompt Context
+==================================================
+
+Create a dedicated method responsible for transforming memories into AI context.
+
+For example:
+
+buildPromptContext(User $user)
+
+This method should:
+
+- retrieve memories
+- organize them
+- format them
+- return a clean context block
+
+The ContentGenerator should only call this method.
+
+Avoid putting formatting logic directly inside ContentGenerator.
+
+==================================================
+5. AI Memory is long-term
+==================================================
+
+The onboarding information should become the FIRST memory record.
+
+However, design the system so new memories can easily be added later, including:
+
+- writing preferences
+- successful posts
+- connected social accounts
+- user corrections
+- AI learning
+- favorite writing styles
+- preferred platforms
+
+Do not hardcode onboarding into the memory architecture.
+
+Treat onboarding simply as the first source of AI Memory.
+
+==================================================
+6. Future Learning Hooks
+==================================================
+
+Do NOT implement learning yet.
+
+However, prepare the architecture by adding comments and extension points where future learning events can plug in.
+
+Examples:
+
+- User generated content
+- User edited AI output
+- User published content
+- User selected a different tone
+- User consistently writes for LinkedIn
+
+These events should eventually be able to create or update AI Memory.
+
+The code should be prepared for this without implementing the feature now.
+
+==================================================
+7. Documentation
+==================================================
+
+After making the improvements, provide a short summary explaining:
+
+- what changed
+- why the architecture is stronger
+- how future AI Memory can expand without requiring major refactoring
+
+Do not change any user-facing behaviour.
+
+The onboarding experience should remain exactly the same.
+
+Only improve the internal architecture, naming, scalability and maintainability.                            <td class="py-3 pr-4">
                                 <div class="text-gray-800 font-medium">{{ $signup->name ?: Str::before($signup->email, '@') }}</div>
                                 <div class="text-xs text-gray-500">{{ $signup->email }}</div>
                             </td>

@@ -42,6 +42,10 @@ class EmailAuthController extends Controller
 
         $request->session()->regenerate();
 
+        if (! $request->user()->onboarding_completed_at) {
+            return redirect()->route('onboarding.show')->with('status', 'Signed in.');
+        }
+
         return redirect()->intended(route('dashboard'))->with('status', 'Signed in.');
     }
 
@@ -99,7 +103,7 @@ class EmailAuthController extends Controller
             'verification_sent_at' => null,
         ])->save();
 
-        return redirect()->route('dashboard')->with('status', 'Email verified.');
+        return redirect()->route('onboarding.show')->with('status', 'Email verified.');
     }
 
     public function resendVerification(Request $request): RedirectResponse

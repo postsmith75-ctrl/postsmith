@@ -6,15 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\DiscoveredDriver;
 use App\Models\Post;
 use App\Services\Postsmith\UsageManager;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request, UsageManager $usageManager): View
+    public function __invoke(Request $request, UsageManager $usageManager): View|RedirectResponse
     {
         $user = $request->user();
+
+        if ($user && ! $user->onboarding_completed_at) {
+            return redirect()->route('onboarding.show');
+        }
+
         $historyDays = $usageManager->historyDays($user);
         $postsQuery = $user ? $user->posts()->latest() : null;
 

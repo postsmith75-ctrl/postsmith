@@ -25,6 +25,7 @@ class User extends Authenticatable
         'role',
         'google_id',
         'email_verified',
+        'onboarding_completed_at',
         'generations_used',
         'generations_reset_at',
         'pro_expires_at',
@@ -47,6 +48,16 @@ class User extends Authenticatable
     public function generationHistory(): HasMany
     {
         return $this->hasMany(GenerationHistory::class);
+    }
+
+    public function aiMemories(): HasMany
+    {
+        return $this->hasMany(UserAiMemory::class, 'user_id');
+    }
+
+    public function memories(): HasMany
+    {
+        return $this->aiMemories();
     }
 
     public function payments(): HasMany
@@ -93,6 +104,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'email_verified' => 'boolean',
+            'onboarding_completed_at' => 'datetime',
             'verification_sent_at' => 'datetime',
             'reset_expires_at' => 'datetime',
             'generations_reset_at' => 'datetime',

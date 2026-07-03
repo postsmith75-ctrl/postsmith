@@ -25,7 +25,11 @@ class RewriteController extends Controller
             return back()->withErrors(['draft' => 'Generation limit reached for this plan.'])->withInput();
         }
 
-        $result = $generator->rewrite($data['draft'], $data['platform'], $data['length'], $data['drivers'] ?? []);
+        if ($request->user() && ! $request->user()->onboarding_completed_at) {
+            return redirect()->route('onboarding.show');
+        }
+
+        $result = $generator->rewrite($data['draft'], $data['platform'], $data['length'], $data['drivers'] ?? [], $request->user());
         $usageManager->increment($request->user());
 
         if ($request->user()) {

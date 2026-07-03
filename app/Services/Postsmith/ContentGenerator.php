@@ -2,6 +2,7 @@
 
 namespace App\Services\Postsmith;
 
+use App\Models\User;
 use App\Models\TrainingExample;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
@@ -9,14 +10,18 @@ use Illuminate\Support\Str;
 
 class ContentGenerator
 {
-    public function fromThought(string $thought, string $platform, string $length, array $drivers = []): array
+    public function __construct(private readonly AiMemory $memory)
+    {
+    }
+
+    public function fromThought(string $thought, string $platform, string $length, array $drivers = [], ?User $user = null): array
     {
         $drivers = $this->normalizeDrivers($drivers);
 
         if ($this->hasAiConfig()) {
             $ai = $this->callAi(
                 'You are PostSmith, a senior social content strategist. Return strict JSON with a posts array. Each item must have driver, text, and why_it_works.',
-                $this->generationPrompt($thought, $platform, $length, $drivers),
+                $this->generationPrompt($thought, $platform, $length, $drivers, $user),
                 1800
             );
 
@@ -28,14 +33,14 @@ class ContentGenerator
         return ['posts' => $this->fallbackGenerate($thought, $platform, $length, $drivers), 'source' => 'fallback'];
     }
 
-    public function rewrite(string $draft, string $platform, string $length, array $drivers = []): array
+    public function rewrite(string $draft, string $platform, string $length, array $drivers = [], ?User $user = null): array
     {
         $drivers = $this->normalizeDrivers($drivers);
 
         if ($this->hasAiConfig()) {
             $ai = $this->callAi(
                 'You rewrite social posts while preserving the writer emotion and message. Return strict JSON with a rewrites array. Each item must have driver, text, and what_changed.',
-                $this->rewritePrompt($draft, $platform, $length, $drivers),
+                $this->rewritePrompt($draft, $platform, $length, $drivers, $user),
                 1800
             );
 
@@ -75,15 +80,17 @@ class ContentGenerator
         ];
     }
 
-    private function generationPrompt(string $thought, string $platform, string $length, array $drivers): string
+    private function generationPrompt(string $thought, string $platform, string $length, array $drivers, ?User $user): string
     {
         $examples = $this->trainingBlock($drivers, $platform);
         $driverList = implode(', ', $drivers);
+        $memory = $this->memoryBlock($user);
 
         return <<<PROMPT
 Platform: {$platform}
 Length: {$length}
 Drivers to use: {$driverList}
+{$memory}
 Raw thought: {$thought}
 {$examples}
 
@@ -91,18 +98,27 @@ Create one post per driver. Preserve the user's emotion and meaning, but improve
 PROMPT;
     }
 
-    private function rewritePrompt(string $draft, string $platform, string $length, array $drivers): string
+    private function rewritePrompt(string $draft, string $platform, string $length, array $drivers, ?User $user): string
     {
         $driverList = implode(', ', $drivers);
+        $memory = $this->memoryBlock($user);
 
         return <<<PROMPT
 Platform: {$platform}
 Length: {$length}
 Drivers to use: {$driverList}
+{$memory}
 Draft: {$draft}
 
 Rewrite this post once per driver. Preserve the original point. Improve opening line, rhythm, specificity, and ending.
 PROMPT;
+    }
+
+    private function memoryBlock(?User $user): string
+    {
+        $memory = $this->memory->buildPromptContext($user);
+
+        return $memory === '' ? '' : "\n{$memory}\n";
     }
 
     private function trainingBlock(array $drivers, string $platform): string

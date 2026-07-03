@@ -25,7 +25,11 @@ class GenerateController extends Controller
             return back()->withErrors(['thought' => 'Generation limit reached for this plan.'])->withInput();
         }
 
-        $result = $generator->fromThought($data['thought'], $data['platform'], $data['length'], $data['drivers'] ?? []);
+        if ($request->user() && ! $request->user()->onboarding_completed_at) {
+            return redirect()->route('onboarding.show');
+        }
+
+        $result = $generator->fromThought($data['thought'], $data['platform'], $data['length'], $data['drivers'] ?? [], $request->user());
         $usageManager->increment($request->user());
 
         if ($request->user()) {

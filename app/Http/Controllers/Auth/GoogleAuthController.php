@@ -47,6 +47,7 @@ class GoogleAuthController extends Controller
         }
 
         $user = User::query()->firstOrNew(['email' => $email]);
+        $isNewUser = ! $user->exists;
         $user->fill([
             'name' => $googleUser->getName() ?: $googleUser->getNickname() ?: $user->name ?: Str::before($email, '@'),
             'google_id' => $googleUser->getId(),
@@ -54,7 +55,7 @@ class GoogleAuthController extends Controller
             'email_verified' => true,
         ]);
 
-        if (! $user->exists) {
+        if ($isNewUser) {
             $user->password = Str::password(48);
             $user->generations_reset_at = now();
         }
@@ -63,6 +64,10 @@ class GoogleAuthController extends Controller
 
         Auth::login($user, true);
         request()->session()->regenerate();
+
+        if ($isNewUser || ! $user->onboarding_completed_at) {
+            return redirect()->route('onboarding.show')->with('status', 'Signed in with Google.');
+        }
 
         return redirect()->intended(route('dashboard'))->with('status', 'Signed in with Google.');
     }

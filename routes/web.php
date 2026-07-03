@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Postsmith\BillingController;
 use App\Http\Controllers\Postsmith\DashboardController;
 use App\Http\Controllers\Postsmith\GenerateController;
+use App\Http\Controllers\Postsmith\OnboardingController;
 use App\Http\Controllers\Postsmith\PostController;
 use App\Http\Controllers\Postsmith\RewriteController;
 use App\Http\Controllers\Postsmith\ViralLabController;
@@ -66,6 +67,8 @@ Route::get('/dev/admin-login', function () {
 })->name('dev.admin-login');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/onboarding', [OnboardingController::class, 'show'])->name('onboarding.show');
+    Route::post('/onboarding', [OnboardingController::class, 'store'])->name('onboarding.store');
     Route::get('/email/verify', [EmailAuthController::class, 'showVerify'])->name('verification.notice');
     Route::post('/email/verify', [EmailAuthController::class, 'verifyEmail'])->name('verification.verify');
     Route::post('/email/verification-notification', [EmailAuthController::class, 'resendVerification'])->name('verification.send');

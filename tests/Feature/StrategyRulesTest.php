@@ -232,7 +232,7 @@ class StrategyRulesTest extends TestCase
         $this->assertArrayHasKey('guidance', $context->lengthRules);
         $this->assertIsArray($context->lengthRules['guidance']);
         $this->assertGreaterThan(0, count($context->lengthRules['guidance']));
-        
+
         foreach ($context->lengthRules['guidance'] as $item) {
             $this->assertIsString($item);
         }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Postsmith\BillingController;
 use App\Http\Controllers\Postsmith\DashboardController;
 use App\Http\Controllers\Postsmith\GenerateController;
+use App\Http\Controllers\Postsmith\GeneratorPreferenceController;
 use App\Http\Controllers\Postsmith\OnboardingController;
 use App\Http\Controllers\Postsmith\PostController;
 use App\Http\Controllers\Postsmith\RewriteController;
@@ -74,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/email/verification-notification', [EmailAuthController::class, 'resendVerification'])->name('verification.send');
     Route::post('/billing/flutterwave/intent', [BillingController::class, 'createFlutterwaveIntent'])->name('billing.flutterwave.intent');
     Route::get('/billing/flutterwave/verify', [BillingController::class, 'verifyFlutterwave'])->name('billing.flutterwave.verify');
+    Route::patch('/generator-preferences', [GeneratorPreferenceController::class, 'update'])->name('generator-preferences.update');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/export', [PostController::class, 'export'])->name('posts.export');
     Route::patch('/posts/{post}/metrics', [PostController::class, 'updateMetrics'])->name('posts.metrics');

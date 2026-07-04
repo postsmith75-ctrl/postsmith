@@ -6,7 +6,8 @@
         $activeTab = 'viral_lab';
     }
     $items = $generated ?: $rewrites;
-    $platform = old('platform', 'Facebook Groups/Feed');
+    $platform = old('platform', $generatorPreferences['last_platform'] ?? config('postsmith.generator.defaults.platform'));
+    $goal = old('goal', $generatorPreferences['last_goal'] ?? config('postsmith.generator.defaults.goal'));
     $length = old('length', 'medium');
     $generationLimit = $usage['limit'] ?? 0;
     $generationRemaining = $generationLimit < 0 ? -1 : max(0, (int) ($usage['remaining'] ?? 0));
@@ -478,6 +479,41 @@
             <div class="bg-slate-50/80 rounded-2xl border border-slate-200 p-3 sm:p-6">
                 <form method="POST" action="{{ route('generate') }}" class="space-y-5" id="form-generate">
                     @csrf
+                    <div class="border border-slate-200 bg-white rounded-lg p-4" id="content-strategy-card">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-sm font-bold text-slate-950">✨ Content Strategy</p>
+                                <p class="text-sm font-semibold text-slate-900 mt-2"><span id="content-strategy-platform">{{ $platform }}</span> • <span id="content-strategy-goal">{{ $goal }}</span></p>
+                                <p class="text-xs text-slate-500 mt-1">Using your preferred strategy.</p>
+                            </div>
+                            <button type="button" id="content-strategy-edit" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition">Edit</button>
+                        </div>
+                        <div id="content-strategy-editor" class="hidden mt-4 pt-4 border-t border-slate-100">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="content-strategy-platform-input" class="block text-sm font-semibold text-gray-700 mb-1">Writing For</label>
+                                    <select id="content-strategy-platform-input" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
+                                        @foreach ($platforms as $p)
+                                            <option value="{{ $p }}" @selected($platform === $p)>{{ $p }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="content-strategy-goal-input" class="block text-sm font-semibold text-gray-700 mb-1">Goal</label>
+                                    <select id="content-strategy-goal-input" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
+                                        @foreach ($goals as $g)
+                                            <option value="{{ $g }}" @selected($goal === $g)>{{ $g }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <p id="content-strategy-error" class="hidden text-xs font-semibold text-red-600 mt-3"></p>
+                            <div class="flex items-center justify-end gap-3 mt-4">
+                                <button type="button" id="content-strategy-cancel" class="text-sm font-semibold text-slate-500 hover:text-slate-700 transition">Cancel</button>
+                                <button type="button" id="content-strategy-apply" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition text-sm">Apply</button>
+                            </div>
+                        </div>
+                    </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">What's on your mind?</label>
                         <textarea name="thought" rows="4" placeholder="A feeling, a question, a rant, a win, a struggle - even one sentence. Example: 'I'm tired of posting everyday and getting zero comments back'" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition resize-y text-base" required>{{ old('thought') }}</textarea>
@@ -1008,6 +1044,7 @@
         data-flw-currency="{{ config('postsmith.payments.currency') }}"
         data-billing-intent-url="{{ auth()->check() ? route('billing.flutterwave.intent') : '' }}"
         data-billing-verify-url="{{ route('billing.flutterwave.verify') }}"
+        data-generator-preferences-url="{{ auth()->check() ? route('generator-preferences.update') : '' }}"
         data-auth-redirect-url="{{ route('login') }}"
         data-auth-user='@json(auth()->check() ? ['id' => auth()->id(), 'email' => auth()->user()->email, 'name' => auth()->user()->name ?: auth()->user()->email] : null, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)'
         data-starter-monthly="{{ (float) config('postsmith.tiers.starter.checkout_monthly_price') }}"
@@ -1024,6 +1061,7 @@
         var FLW_CURRENCY = POSTSMITH_CONFIG.flwCurrency;
         var BILLING_INTENT_URL = POSTSMITH_CONFIG.billingIntentUrl;
         var BILLING_VERIFY_URL = POSTSMITH_CONFIG.billingVerifyUrl;
+        var GENERATOR_PREFERENCES_URL = POSTSMITH_CONFIG.generatorPreferencesUrl;
         var AUTH_REDIRECT_URL = POSTSMITH_CONFIG.authRedirectUrl;
         var AUTH_USER = JSON.parse(POSTSMITH_CONFIG.authUser);
         var PLAN_AMOUNTS = {
@@ -1142,6 +1180,98 @@
             if (count) count.textContent = checked.length + ' of 5 selected';
         }
 
+        function setupContentStrategyEditor() {
+            var editor = document.getElementById('content-strategy-editor');
+            var editButton = document.getElementById('content-strategy-edit');
+            var cancelButton = document.getElementById('content-strategy-cancel');
+            var applyButton = document.getElementById('content-strategy-apply');
+            var platformInput = document.getElementById('content-strategy-platform-input');
+            var goalInput = document.getElementById('content-strategy-goal-input');
+            var platformSummary = document.getElementById('content-strategy-platform');
+            var goalSummary = document.getElementById('content-strategy-goal');
+            var platformGenerateInput = document.querySelector('#scratch-advanced select[name="platform"]');
+            var error = document.getElementById('content-strategy-error');
+
+            if (!editor || !editButton || !cancelButton || !applyButton || !platformInput || !goalInput || !platformSummary || !goalSummary) {
+                return;
+            }
+
+            function showError(message) {
+                if (!error) return;
+                error.textContent = message;
+                error.classList.remove('hidden');
+            }
+
+            function clearError() {
+                if (!error) return;
+                error.textContent = '';
+                error.classList.add('hidden');
+            }
+
+            function collapse() {
+                editor.classList.add('hidden');
+                editButton.classList.remove('hidden');
+                clearError();
+            }
+
+            editButton.addEventListener('click', function() {
+                platformInput.value = platformSummary.textContent.trim();
+                goalInput.value = goalSummary.textContent.trim();
+                editor.classList.remove('hidden');
+                editButton.classList.add('hidden');
+                clearError();
+            });
+
+            cancelButton.addEventListener('click', function() {
+                platformInput.value = platformSummary.textContent.trim();
+                goalInput.value = goalSummary.textContent.trim();
+                collapse();
+            });
+
+            applyButton.addEventListener('click', function() {
+                if (!AUTH_USER || !GENERATOR_PREFERENCES_URL) {
+                    window.location.href = AUTH_REDIRECT_URL;
+                    return;
+                }
+
+                applyButton.disabled = true;
+                applyButton.textContent = 'Saving...';
+                clearError();
+
+                fetch(GENERATOR_PREFERENCES_URL, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        platform: platformInput.value,
+                        goal: goalInput.value
+                    })
+                })
+                    .then(function(response) {
+                        if (!response.ok) throw new Error('Could not update content strategy.');
+                        return response.json();
+                    })
+                    .then(function(preferences) {
+                        platformSummary.textContent = preferences.platform;
+                        goalSummary.textContent = preferences.goal;
+                        if (platformGenerateInput) {
+                            platformGenerateInput.value = preferences.platform;
+                        }
+                        collapse();
+                    })
+                    .catch(function(error) {
+                        showError(error.message || 'Could not update content strategy.');
+                    })
+                    .finally(function() {
+                        applyButton.disabled = false;
+                        applyButton.textContent = 'Apply';
+                    });
+            });
+        }
+
         function copyPost(elementId, btn) {
             var el = document.getElementById(elementId);
             if (!el) return;
@@ -1176,6 +1306,8 @@
             var percent = Number(bar.dataset.usagePercent || 0);
             bar.style.width = Math.max(0, Math.min(100, percent)) + '%';
         });
+
+        setupContentStrategyEditor();
     </script>
 </body>
 </html>

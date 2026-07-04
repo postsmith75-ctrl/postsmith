@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Postsmith;
 use App\Http\Controllers\Controller;
 use App\Models\DiscoveredDriver;
 use App\Models\Post;
+use App\Services\Postsmith\GeneratorPreferences;
 use App\Services\Postsmith\UsageManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
@@ -13,7 +14,7 @@ use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request, UsageManager $usageManager): View|RedirectResponse
+    public function __invoke(Request $request, UsageManager $usageManager, GeneratorPreferences $generatorPreferences): View|RedirectResponse
     {
         $user = $request->user();
 
@@ -72,7 +73,9 @@ class DashboardController extends Controller
             'brand' => config('postsmith.brand'),
             'drivers' => $drivers->all(),
             'driverLibrary' => DiscoveredDriver::query()->where('status', 'active')->orderBy('driver_name')->get(),
-            'platforms' => ['Facebook Groups/Feed', 'LinkedIn', 'Twitter/X', 'Instagram', 'Threads', 'Reddit'],
+            'platforms' => config('postsmith.generator.platforms'),
+            'goals' => config('postsmith.generator.goals'),
+            'generatorPreferences' => $generatorPreferences->forUser($user),
             'lengths' => ['short' => 'Short', 'medium' => 'Medium', 'long' => 'Long'],
             'generated' => session('generated'),
             'rewrites' => session('rewrites'),

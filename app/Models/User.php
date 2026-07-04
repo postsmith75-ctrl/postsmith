@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -53,6 +54,11 @@ class User extends Authenticatable
     public function aiMemories(): HasMany
     {
         return $this->hasMany(UserAiMemory::class, 'user_id');
+    }
+
+    public function generatorPreference(): HasOne
+    {
+        return $this->hasOne(UserGeneratorPreference::class, 'user_id');
     }
 
     public function memories(): HasMany

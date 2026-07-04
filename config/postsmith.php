@@ -40,6 +40,27 @@ return [
         'Story',
     ],
 
+    'generator' => [
+        'platforms' => [
+            'LinkedIn',
+            'Facebook',
+            'Instagram',
+            'X',
+        ],
+        'goals' => [
+            'Get Engagement',
+            'Generate Leads',
+            'Increase Sales',
+            'Build Brand Awareness',
+            'Drive Website Traffic',
+            'Grow Followers',
+        ],
+        'defaults' => [
+            'platform' => 'LinkedIn',
+            'goal' => 'Get Engagement',
+        ],
+    ],
+
     'viral_lab' => [
         'min_words' => 30,
         'min_likes' => 50,

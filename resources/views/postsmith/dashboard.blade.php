@@ -8,7 +8,7 @@
     $items = $generated ?: $rewrites;
     $platform = old('platform', $generatorPreferences['last_platform'] ?? config('postsmith.generator.defaults.platform'));
     $goal = old('goal', $generatorPreferences['last_goal'] ?? config('postsmith.generator.defaults.goal'));
-    $length = old('length', 'medium');
+    $length = old('length', $generatorPreferences['last_length'] ?? config('postsmith.generator.defaults.length'));
     $generationLimit = $usage['limit'] ?? 0;
     $generationRemaining = $generationLimit < 0 ? -1 : max(0, (int) ($usage['remaining'] ?? 0));
     $generationBlocked = (bool) ($usage['blocked'] ?? false);
@@ -483,13 +483,13 @@
                         <div class="flex items-start justify-between gap-3">
                             <div>
                                 <p class="text-sm font-bold text-slate-950">✨ Content Strategy</p>
-                                <p class="text-sm font-semibold text-slate-900 mt-2"><span id="content-strategy-platform">{{ $platform }}</span> • <span id="content-strategy-goal">{{ $goal }}</span></p>
+                                <p class="text-sm font-semibold text-slate-900 mt-2"><span id="content-strategy-platform">{{ $platform }}</span> • <span id="content-strategy-goal">{{ $goal }}</span> • <span id="content-strategy-length">{{ $lengths[$length]['label'] ?? ucfirst($length) }}</span></p>
                                 <p class="text-xs text-slate-500 mt-1">Using your preferred strategy.</p>
                             </div>
                             <button type="button" id="content-strategy-edit" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition">Edit</button>
                         </div>
                         <div id="content-strategy-editor" class="hidden mt-4 pt-4 border-t border-slate-100">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <label for="content-strategy-platform-input" class="block text-sm font-semibold text-gray-700 mb-1">Writing For</label>
                                     <select id="content-strategy-platform-input" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
@@ -506,6 +506,14 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div>
+                                    <label for="content-strategy-length-input" class="block text-sm font-semibold text-gray-700 mb-1">Length</label>
+                                    <select id="content-strategy-length-input" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
+                                        @foreach ($lengths as $key => $lengthOption)
+                                            <option value="{{ $key }}" @selected($length === $key)>{{ $lengthOption['label'] }}@if(!empty($lengthOption['description'])) — {{ $lengthOption['description'] }}@endif</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <p id="content-strategy-error" class="hidden text-xs font-semibold text-red-600 mt-3"></p>
                             <div class="flex items-center justify-end gap-3 mt-4">
@@ -519,27 +527,9 @@
                         <textarea name="thought" rows="4" placeholder="A feeling, a question, a rant, a win, a struggle - even one sentence. Example: 'I'm tired of posting everyday and getting zero comments back'" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition resize-y text-base" required>{{ old('thought') }}</textarea>
                         <p class="text-xs text-gray-400 mt-1.5">No need to be polished. Raw thoughts work best.</p>
                     </div>
-                    <div>
-                        <button type="button" onclick="toggleAdvanced('scratch-advanced')" class="text-sm text-indigo-600 font-medium flex items-center gap-1 hover:text-indigo-700 transition"><span id="scratch-advanced-icon">+</span> Choose platform & length</button>
-                        <div id="scratch-advanced" class="hidden mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Platform</label>
-                                <select name="platform" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
-                                    @foreach ($platforms as $p)
-                                        <option value="{{ $p }}" @selected($platform === $p)>{{ $p }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Length</label>
-                                <select name="length" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
-                                    <option value="short" @selected($length === 'short')>Short - Quick hit (2-3 lines)</option>
-                                    <option value="medium" @selected($length === 'medium')>Medium - Natural flow (8-12 lines)</option>
-                                    <option value="long" @selected($length === 'long')>Long - Full story (5-7 paragraphs)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                    <input type="hidden" name="platform" id="platform-field-scratch" value="{{ $platform }}">
+                    <input type="hidden" name="goal" id="goal-field-scratch" value="{{ $goal }}">
+                    <input type="hidden" name="length" id="length-field-scratch" value="{{ $length }}">
                     <div>
                         <div class="flex items-center gap-2 mb-2">
                             <label class="block text-sm font-semibold text-gray-700">Your Forge</label>
@@ -579,22 +569,17 @@
                         <textarea name="draft" rows="5" placeholder="Even if it's messy, incomplete, or all over the place - just dump it here. PostSmith will figure out what you're trying to say and fix the structure." class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition resize-y text-base" required>{{ old('draft') }}</textarea>
                         <p class="text-xs text-gray-400 mt-1.5">Don't edit it first. The messier, the better we can help.</p>
                     </div>
+                    <input type="hidden" name="platform" id="platform-field-rewrite" value="{{ $platform }}">
+                    <input type="hidden" name="goal" id="goal-field-rewrite" value="{{ $goal }}">
+                    <input type="hidden" name="length" id="length-field-rewrite" value="{{ $length }}">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Platform</label>
-                            <select name="platform" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
-                                @foreach ($platforms as $p)
-                                    <option value="{{ $p }}">{{ $p }}</option>
-                                @endforeach
-                            </select>
+                            <p class="text-sm font-semibold text-gray-700 mb-1">Platform</p>
+                            <div class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-slate-50 text-slate-700">{{ $platform }}</div>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Length</label>
-                            <select name="length" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition bg-white">
-                                <option value="short">Short - Quick hit</option>
-                                <option value="medium" selected>Medium - Natural flow</option>
-                                <option value="long">Long - Full story</option>
-                            </select>
+                            <p class="text-sm font-semibold text-gray-700 mb-1">Length</p>
+                            <div class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-slate-50 text-slate-700">{{ $lengths[$length]['label'] ?? ucfirst($length) }}</div>
                         </div>
                     </div>
                     <div>
@@ -1187,9 +1172,11 @@
             var applyButton = document.getElementById('content-strategy-apply');
             var platformInput = document.getElementById('content-strategy-platform-input');
             var goalInput = document.getElementById('content-strategy-goal-input');
+            var lengthInput = document.getElementById('content-strategy-length-input');
             var platformSummary = document.getElementById('content-strategy-platform');
             var goalSummary = document.getElementById('content-strategy-goal');
-            var platformGenerateInput = document.querySelector('#scratch-advanced select[name="platform"]');
+            var lengthSummary = document.getElementById('content-strategy-length');
+            var strategyFields = document.querySelectorAll('input[name="platform"], input[name="goal"], input[name="length"]');
             var error = document.getElementById('content-strategy-error');
 
             if (!editor || !editButton || !cancelButton || !applyButton || !platformInput || !goalInput || !platformSummary || !goalSummary) {
@@ -1217,6 +1204,8 @@
             editButton.addEventListener('click', function() {
                 platformInput.value = platformSummary.textContent.trim();
                 goalInput.value = goalSummary.textContent.trim();
+                var currentLength = document.getElementById('length-field-scratch')?.value || document.getElementById('length-field-rewrite')?.value || lengthInput.value;
+                lengthInput.value = currentLength;
                 editor.classList.remove('hidden');
                 editButton.classList.add('hidden');
                 clearError();
@@ -1225,6 +1214,8 @@
             cancelButton.addEventListener('click', function() {
                 platformInput.value = platformSummary.textContent.trim();
                 goalInput.value = goalSummary.textContent.trim();
+                var currentLength = document.getElementById('length-field-scratch')?.value || document.getElementById('length-field-rewrite')?.value || lengthInput.value;
+                lengthInput.value = currentLength;
                 collapse();
             });
 
@@ -1247,7 +1238,8 @@
                     },
                     body: JSON.stringify({
                         platform: platformInput.value,
-                        goal: goalInput.value
+                        goal: goalInput.value,
+                        length: lengthInput.value,
                     })
                 })
                     .then(function(response) {
@@ -1257,9 +1249,14 @@
                     .then(function(preferences) {
                         platformSummary.textContent = preferences.platform;
                         goalSummary.textContent = preferences.goal;
-                        if (platformGenerateInput) {
-                            platformGenerateInput.value = preferences.platform;
-                        }
+                        lengthSummary.textContent = preferences.length_label || preferences.length_key || preferences.length;
+                        strategyFields.forEach(function(field) {
+                            if (field.name === 'length' && preferences.length_key !== undefined) {
+                                field.value = preferences.length_key;
+                            } else if (preferences[field.name] !== undefined) {
+                                field.value = preferences[field.name];
+                            }
+                        });
                         collapse();
                     })
                     .catch(function(error) {

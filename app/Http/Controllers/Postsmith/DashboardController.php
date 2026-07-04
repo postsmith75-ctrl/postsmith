@@ -76,7 +76,7 @@ class DashboardController extends Controller
             'platforms' => config('postsmith.generator.platforms'),
             'goals' => config('postsmith.generator.goals'),
             'generatorPreferences' => $generatorPreferences->forUser($user),
-            'lengths' => ['short' => 'Short', 'medium' => 'Medium', 'long' => 'Long'],
+            'lengths' => config('postsmith.generator.lengths'),
             'generated' => session('generated'),
             'rewrites' => session('rewrites'),
             'source' => session('source'),

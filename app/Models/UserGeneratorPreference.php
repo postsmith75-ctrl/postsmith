@@ -11,6 +11,7 @@ class UserGeneratorPreference extends Model
         'user_id',
         'last_platform',
         'last_goal',
+        'last_length',
     ];
 
     public function user(): BelongsTo

@@ -19,7 +19,7 @@ class GenerateController extends Controller
             'thought' => ['required', 'string', 'max:5000'],
             'platform' => ['required', 'string', 'max:100', Rule::in(config('postsmith.generator.platforms'))],
             'goal' => ['nullable', 'string', 'max:100', Rule::in(config('postsmith.generator.goals'))],
-            'length' => ['required', 'in:short,medium,long'],
+            'length' => ['required', 'string', 'max:100', Rule::in(array_keys(config('postsmith.generator.lengths')))],
             'drivers' => ['nullable', 'array', 'max:5'],
             'drivers.*' => ['string', 'max:100'],
         ]);
@@ -42,6 +42,10 @@ class GenerateController extends Controller
 
             if (array_key_exists('goal', $data)) {
                 $preferenceSettings['goal'] = $data['goal'];
+            }
+
+            if (array_key_exists('length', $data)) {
+                $preferenceSettings['length'] = $data['length'];
             }
 
             $generatorPreferences->remember($request->user(), $preferenceSettings);
